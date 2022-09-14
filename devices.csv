@@ -1,0 +1,18 @@
+﻿ID,X,Device,Category
+0.323,2.664,Omna Camera,Low
+0.353,2.042,Smart Things Hub,Low
+0.439,3.426,Netamo Climate,Low
+0.447,0.175,Lutron Hub,Low
+0.474,7.500,iDevice Socket,Low
+0.483,4.700,Wemo Outlet,Low
+0.543,15.000,iView Light,Medium
+0.550,18.000,Tplink Light,Medium
+0.595,13.000,DLink Camera,Medium
+0.730,23.000,HUE (IoT23),High
+0.787,29.990,TCP Light,High
+0.796,25.000,HUE (IoT Sense),High
+0.810,21.000,Door Lock,High
+0.845,26.000,Avox Light,High
+0.866,29.500,Musiac Music,High
+0.881,21.500,Wink Hub,High
+1.140,26.000,Amazon Echo,High
