@@ -2,4 +2,6 @@ csv/
 results/
 results2/
 results_v2/
-
+venv/
+__pycache__/
+AAE/
