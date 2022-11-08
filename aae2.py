@@ -75,13 +75,13 @@ X_train=X_train.astype('float64')
 
 x=torch.from_numpy(X_train)
 my_dataset = TensorDataset(x, y)
-train_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
+train_dataloader = DataLoader(my_dataset, batch_size=16)  # create your dataloader
 
 y=torch.Tensor(np.ones(mal_np.shape[0]))
 mal_np=mal_np.astype('float64')
 x=torch.from_numpy(mal_np)
 my_dataset = TensorDataset(x, y)
-malicious_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
+malicious_dataloader = DataLoader(my_dataset, batch_size=16)  # create your dataloader
 
 print('Train dataset length: {}'.format(len(train_dataloader.dataset)))
 print('Malicious dataset length: {}'.format(len(malicious_dataloader.dataset)))
@@ -92,14 +92,15 @@ print('Malicious dataset length: {}'.format(len(malicious_dataloader.dataset)))
 X_dim = X_train.shape[0] #?
 print("X.shape:", X_train.shape)
 # exit()
-N = 10 #?  I'm assuming number of hiddens
+N = 10 #?
 z_dim = 5 #? #encoded vector
 # F = 0 #? torch.nn.functional
 # X = X_train #?
 X = torch.Tensor(X_train.T)
-if torch.cuda.is_available():
+# if torch.cuda.is_available():
+if args.cuda:
     X = X.cuda()
-TINY = 0.001 #?
+TINY = 1e-05 #?
 train_batch_size = 42 #?
 # Variable = 0 #? torch.autograd variable
 # D_loss = 0 #?
@@ -159,7 +160,8 @@ torch.manual_seed(10)
 # Q, P = Q_net(), P_net(0)     # Encoder/Decoder
 Q, P = Q_net(), P_net()     # Encoder/Decoder
 D_gauss = D_net_gauss()                # Discriminator adversarial
-if torch.cuda.is_available():
+# if torch.cuda.is_available():
+if args.cuda:
     Q = Q.cuda()
     P = P.cuda()
     D_cat = D_gauss.cuda()
@@ -172,11 +174,16 @@ Q_encoder = optim.Adam(Q.parameters(), lr=gen_lr)
 Q_generator = optim.Adam(Q.parameters(), lr=reg_lr)
 D_gauss_solver = optim.Adam(D_gauss.parameters(), lr=reg_lr)
 
-
+#train:
+# def Train():
 z_sample = Q(X)
 X_sample = P(z_sample)
-recon_loss = F.binary_cross_entropy(X_sample + TINY, 
-                                    X.resize(train_batch_size, X_dim) + TINY)
+# print(torch.min(X))
+# recon_loss = F.binary_cross_entropy(X_sample + TINY, 
+#                                     # X.resize(train_batch_size, X_dim) + TINY)
+#                                     X.reshape(train_batch_size, X_dim) + TINY)
+recon_loss = F.binary_cross_entropy(X_sample, 
+                                    X.reshape(train_batch_size, X_dim))
 recon_loss.backward()
 P_decoder.step()
 Q_encoder.step()
@@ -185,12 +192,16 @@ Q_encoder.step()
 Q.eval()    
 # z_real_gauss = Variable(torch.randn(train_batch_size, z_dim) * 5)   # Sample from N(0,5)
 z_real_gauss = (torch.randn(train_batch_size, z_dim) * 5).numpy()   # Sample from N(0,5)
-if torch.cuda.is_available():
+# if torch.cuda.is_available():
+if args.cuda:
     z_real_gauss = z_real_gauss.cuda()
 z_fake_gauss = Q(X)
 
 
 # Compute discriminator outputs and loss
+print(type(z_real_gauss), type(z_fake_gauss))
+z_real_gauss = torch.from_numpy(z_real_gauss)
+# torch.from_numpy(z_fake_gauss)
 D_real_gauss, D_fake_gauss = D_gauss(z_real_gauss), D_gauss(z_fake_gauss)
 D_loss_gauss = -torch.mean(torch.log(D_real_gauss + TINY) + torch.log(1 - D_fake_gauss + TINY))
 # D_loss.backward()       # Backpropagate loss
@@ -206,6 +217,10 @@ D_fake_gauss = D_gauss(z_fake_gauss)
 G_loss = -torch.mean(torch.log(D_fake_gauss + TINY))
 G_loss.backward()
 Q_generator.step()
+# return D_loss_gauss, G_loss
+
+# for epoch in range(500):
+#     Train()
 
 print("Z FAKE GAUSS")
 print(z_fake_gauss)
