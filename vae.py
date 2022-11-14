@@ -57,17 +57,26 @@ cat_out=[]
 cont_dim=0
 input_dim=0
 
+base_dir='/s/luffy/b/nobackup/mgorb/iot'
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
-    benign_np, preprocess, float_cols, categorical_cols=df_to_np('csv/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
-    mal_np=df_to_np('csv/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
+    benign_np, preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
+    mal_np=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
     X_train, X_test =benign_np, benign_np
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
+
+    print(float_cols)
+    print(categorical_cols)
+    print(benign_np[:10])
+    #sys.exit()
+
     for col in range(len(categorical_cols)):
         n_cats = preprocess.encoders[categorical_cols[col]]['n_classes']#len(preprocess.encoders[categorical_cols[col]]['encoder'].classes_)
-
+        print(col)
+        print(preprocess.encoders[categorical_cols[col]])
+        sys.exit()
         embed_dim = compute_embedding_size(n_cats)
         embed_layer = torch.nn.Embedding(n_cats, embed_dim).to(device)
         embeddings.append(embed_layer)
@@ -79,9 +88,9 @@ if dataset=='ton_iot':
 elif dataset=='iot23':
     from data_preprocess.drop_columns import iot23
 
-    benign_np, preprocess, float_cols, categorical_cols = df_to_np( '/s/luffy/b/nobackup/mgorb/iot/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=True, return_preprocess=True)
+    benign_np, preprocess, float_cols, categorical_cols = df_to_np( f'{base_dir}/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=True, return_preprocess=True)
 
-    mal_np = df_to_np( '/s/luffy/b/nobackup/mgorb/iot/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=False)
+    mal_np = df_to_np( f'{base_dir}/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=False)
 
     X_train, X_test = benign_np, benign_np
     feature_weights = calculate_weights(X_train)
@@ -103,8 +112,8 @@ elif dataset=='iot23':
     input_dim+=cont_dim
 elif dataset=='nf_bot_iot':
     from data_preprocess.drop_columns import nf_bot_iot
-    benign_np , preprocess, float_cols, categorical_cols=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
-    mal_np=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
+    benign_np , preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
+    mal_np=df_to_np(f'{base_dir}/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
 
     X_train = X_train.astype('float64')
@@ -125,31 +134,38 @@ elif dataset=='nf_bot_iot':
 
 
 
-class AE(nn.Module):
+class VAE(nn.Module):
     def __init__(self,input_dim, embeddings, cats_out, cont_dim):
-        super(AE, self).__init__()
+        super(VAE, self).__init__()
 
-        self.fc1 = nn.Linear(input_dim, 64)
+        self.fc1 = nn.Linear(input_dim, 128)
 
-        self.fc2 = nn.Linear(64, 8)
-        self.fc3 = nn.Linear(8, 64)
-        self.fc4 = nn.Linear(64, cont_dim)
+        #self.fc2 = nn.Linear(128, 64)
+        self.enc_mu = torch.nn.Linear(128, 64)
+        self.enc_log_sigma = torch.nn.Linear(128, 64)
+
+        self.fc3 = nn.Linear(64, 128)
+        self.fc4 = nn.Linear(128, cont_dim)
         self.embeddings=torch.nn.ModuleList(embeddings)
         self.cats_out = []
         for cat in cats_out:
-            self.cats_out.append(torch.nn.Linear(64, cat))
+            self.cats_out.append(torch.nn.Linear(128, cat))
         self.cats_out = torch.nn.ModuleList(self.cats_out)
 
     def encode(self, x):
         h1 = F.relu(self.fc1(x))
-        return self.fc2(h1)
+        return self.enc_mu(h1),self.enc_log_sigma(h1)
 
+    def reparameterize(self, mu, logvar):
+        std = torch.exp(0.5*logvar)
+        eps = torch.randn_like(std)
+        return mu + eps*std
 
     def decode(self, z):
         h3 = F.relu(self.fc3(z))
 
         out_cont=torch.sigmoid(self.fc4(h3))
-        cat_outs=[]#torch.nn.ModuleList()
+        cat_outs=[]
         for cat in self.cats_out:
             cat_outs.append(cat(h3))
 
@@ -165,45 +181,56 @@ class AE(nn.Module):
 
         embedded_cats = torch.cat(embed_list, dim=1)
         inputs=torch.cat([embedded_cats.float(),x[:,:num_fts].float()], dim=1)
-        z = self.encode(inputs)
-        return self.decode(z)
+        mu, logvar = self.encode(inputs)
+        z = self.reparameterize(mu, logvar)
+        out_cont, cat_outs=self.decode(z)
+        return out_cont, cat_outs, mu, logvar
 
 
 # Reconstruction + KL divergence losses summed over all elements and batch
-def loss_function(out_cont, cat_outs, data, reduction='sum'):
+def loss_function(out_cont, cat_outs, data, mu, logvar, reduction='sum'):
     loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
+    recon_loss=0
     if reduction=='none':
-        loss=torch.sum(loss, dim=1)
+        recon_loss=torch.sum(loss, dim=1)
     for cat in range(len(cat_outs)):
         target=data[:,out_cont.size(1)+cat].long()
-        loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
-
-    return loss.double()
+        recon_loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
+    KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+    return recon_loss+KLD, recon_loss.double(), KLD
 
 
 def train(epoch, ):
     model.train()
     train_loss = 0
+    recon_loss=0
+    kld_loss=0
     for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
 
         optimizer.zero_grad()
-        out_cont, cat_outs = model(data)
-        loss = loss_function(out_cont, cat_outs, data)
+        out_cont, cat_outs , mu, logvar= model(data)
+        loss, recon, kld = loss_function(out_cont, cat_outs, data, mu, logvar)
 
         loss.backward()
+
         train_loss += loss.item()
+        recon_loss+=recon.item()
+        kld_loss+=kld.item()
+
         #print(train_loss)
         optimizer.step()
-        '''if batch_idx % args.log_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_dataloader.dataset),
-                100. * batch_idx / len(train_dataloader),
-                loss.item() / len(data)))'''
+
 
 
     print('====> Epoch: {} Average loss: {:.4f}'.format(
           epoch, train_loss / len(train_dataloader.dataset)))
+    info = {
+        'loss': train_loss/len(train_dataloader.dataset),
+        'recon_loss': recon_loss/len(train_dataloader.dataset),
+        'kld': kld_loss/len(train_dataloader.dataset)
+    }
+    print(f"====> Epoch {epoch}: \n{info}")
 
 
 def test(epoch, best_loss ):
@@ -213,15 +240,15 @@ def test(epoch, best_loss ):
     for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
 
-        out_cont, cat_outs = model(data)
-        loss = loss_function(out_cont, cat_outs, data, reduction='none')
+        out_cont, cat_outs, mu, logvar = model(data)
+        loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
 
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
 
         out_cont, cat_outs = model(data)
-        loss = loss_function(out_cont, cat_outs, data, reduction='none')
+        loss = loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
 
     labels=[0 for i in range(len(train_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
@@ -249,11 +276,11 @@ print('Malicious dataset length: {}'.format(len(malicious_dataloader.dataset)))
 
 best_loss=1e6
 
-model = AE(input_dim, embeddings, cat_out, cont_dim)
+model = VAE(input_dim, embeddings, cat_out, cont_dim)
 model = model.to(device)
 
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
-for epoch in range( args.epochs + 1):
+for epoch in range( 50):
     train(epoch, )
-    if epoch%5==0 :
-        best_loss=test(epoch, best_loss)
+    #if epoch%5==0 :
+        #best_loss=test(epoch, best_loss)

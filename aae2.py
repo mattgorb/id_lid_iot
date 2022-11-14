@@ -47,10 +47,13 @@ cat_out=[]
 cont_dim=0
 input_dim=0
 
+directory='/s/luffy/b/nobackup/mgorb/iot/'
+directory='csv/'
+
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
-    benign_np, preprocess, float_cols, categorical_cols=df_to_np('csv/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
-    mal_np=df_to_np('csv/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
+    benign_np, preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
     X_train, X_test =benign_np, benign_np
     X_train = X_train.astype('float64')
@@ -67,8 +70,11 @@ if dataset=='ton_iot':
         cat_out.append(n_cats)
 
     input_dim+=cont_dim
-    #print(input_dim)
 
+print("HEEERE")
+print(input_dim)
+print(X_train.shape)
+#sys.exit()
 y=torch.Tensor(np.ones(X_train.shape[0]))
 X_train=X_train.astype('float64')
 
@@ -166,6 +172,7 @@ if args.cuda:
     P = P.cuda()
     D_cat = D_gauss.cuda()
     D_gauss = D_net_gauss().cuda()
+
 # Set learning rates
 gen_lr, reg_lr = 0.0006, 0.0008
 # Set optimizators
@@ -178,6 +185,7 @@ D_gauss_solver = optim.Adam(D_gauss.parameters(), lr=reg_lr)
 # def Train():
 z_sample = Q(X)
 X_sample = P(z_sample)
+
 # print(torch.min(X))
 # recon_loss = F.binary_cross_entropy(X_sample + TINY, 
 #                                     # X.resize(train_batch_size, X_dim) + TINY)
