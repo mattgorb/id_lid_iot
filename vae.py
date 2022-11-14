@@ -72,6 +72,11 @@ if dataset=='ton_iot':
     print(benign_np[:2])
     #sys.exit()
 
+    for col in range(len(float_cols)):
+        x = preprocess.encoders[float_cols[col]]['encoder']
+        print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(
+            benign_np[:100, len(float_cols)]))
+        sys.exit()
     for col in range(len(categorical_cols)):
         n_cats = preprocess.encoders[categorical_cols[col]]['n_classes']#len(preprocess.encoders[categorical_cols[col]]['encoder'].classes_)
         print(col)
