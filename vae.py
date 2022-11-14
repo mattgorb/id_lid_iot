@@ -77,6 +77,9 @@ if dataset=='ton_iot':
         print(col)
         print(preprocess.encoders[categorical_cols[col]])
         print(benign_np[:1000,len(float_cols)])
+        x=preprocess.encoders[categorical_cols[col]]['encoder']
+        print(x)
+        print(x.inverse_transform([0]))
         print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:1000,len(float_cols)]))
         sys.exit()
         embed_dim = compute_embedding_size(n_cats)
