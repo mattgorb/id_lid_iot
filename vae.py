@@ -80,7 +80,7 @@ if dataset=='ton_iot':
         x=preprocess.encoders[categorical_cols[col]]['encoder']
         print(x)
         print(x.inverse_transform([0]))
-        print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:1000,len(float_cols)]))
+        print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
         sys.exit()
         embed_dim = compute_embedding_size(n_cats)
         embed_layer = torch.nn.Embedding(n_cats, embed_dim).to(device)
