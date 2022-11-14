@@ -74,7 +74,8 @@ if dataset=='ton_iot':
 
     for col in range(len(float_cols)):
         x = preprocess.encoders[float_cols[col]]['encoder']
-        print(benign_np[:50,0])
+        print(benign_np[:50,0].shape)
+        print(benign_np[:50,0].reshape(-1,1).shape)
         print(preprocess.encoders[float_cols[col]]['encoder'].inverse_transform(
             benign_np[:50,0]))
         sys.exit()
