@@ -236,7 +236,7 @@ def test(epoch, best_loss ):
 
     out_cont_list=[]
     out_cat_list=[]
-    output=None
+
     for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
 
@@ -244,7 +244,7 @@ def test(epoch, best_loss ):
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
 
-
+        output=None
         for cat in cat_outs:
             pred = cat.argmax(dim=1, keepdim=False)
 
@@ -252,12 +252,9 @@ def test(epoch, best_loss ):
                 output=torch.unsqueeze(pred, dim=1)
             else:
                 output=torch.cat([output,torch.unsqueeze(pred, dim=1)], dim=1  )
-            print(output.size())
-        print(output.size())
-        sys.exit()
-        print(cat_outs)
-        sys.exit()
-        out_cat_list.extend(cat_outs.cpu().detach().numpy())
+
+
+        out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont.cpu().detach().numpy())
 
     print("HeEREE")
