@@ -9,7 +9,7 @@ from torchvision.utils import save_image
 import matplotlib.pyplot as plt
 import numpy as np
 from torch.utils.data import TensorDataset, DataLoader
-
+import pandas as pd
 import math
 
 from data_setup import df_to_np, calculate_weights
@@ -67,28 +67,12 @@ if dataset=='ton_iot':
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
 
-    print(float_cols)
-    print(categorical_cols)
-    print(benign_np[:2])
-    #sys.exit()
 
-    for col in range(len(float_cols)):
-        x = preprocess.encoders[float_cols[col]]['encoder']
-        print(benign_np[:50,0].shape)
-        print(benign_np[:50,0].reshape(-1,1).shape)
-        print(preprocess.encoders[float_cols[col]]['encoder'].inverse_transform(
-            benign_np[:50,0].reshape(-1,1)))
-        sys.exit()
+
+
     for col in range(len(categorical_cols)):
         n_cats = preprocess.encoders[categorical_cols[col]]['n_classes']#len(preprocess.encoders[categorical_cols[col]]['encoder'].classes_)
-        print(col)
-        print(preprocess.encoders[categorical_cols[col]])
-        print(benign_np[:1000,len(float_cols)])
-        x=preprocess.encoders[categorical_cols[col]]['encoder']
-        print(x)
-        print(x.inverse_transform([0]))
-        print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
-        sys.exit()
+
         embed_dim = compute_embedding_size(n_cats)
         embed_layer = torch.nn.Embedding(n_cats, embed_dim).to(device)
         embeddings.append(embed_layer)
@@ -230,7 +214,7 @@ def train(epoch, ):
         recon_loss+=recon.item()
         kld_loss+=kld.item()
 
-        #print(train_loss)
+
         optimizer.step()
 
 
@@ -249,6 +233,9 @@ def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
+
+    out_cont_list=[]
+    out_cat_list=[]
     for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
 
@@ -256,18 +243,39 @@ def test(epoch, best_loss ):
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
 
-    for batch_idx, (data, _) in enumerate(malicious_dataloader):
+        out_cat_list.extend(cat_outs)
+        out_cont_list.extend(out_cont)
+
+    print("HeEREE")
+    print(np.array(out_cat_list).shape)
+    print(np.array(out_cont_list).shape)
+    '''for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
 
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
-        losses.extend(loss.cpu().detach().numpy())
+        losses.extend(loss.cpu().detach().numpy())'''
+    print('loss')
+    print(np.mean(np.array(losses)))
+    df=pd.DataFrame()
+    for col in range(len(float_cols)):
+        data_normalizer = preprocess.encoders[float_cols[col]]['encoder']
+        transformed_data=data_normalizer.inverse_transform(np.array(out_cont_list)[:,col].reshape(-1,1))
+        df[float_cols[col]]=transformed_data
 
-    labels=[0 for i in range(len(train_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
+    for col in range(len(categorical_cols)):
 
-    print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
-    precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
-    print("AUPR: {}".format(metrics.auc(recall, precision)))
+        data_normalizer=preprocess.encoders[categorical_cols[col]]['encoder']
+        transformed_data=data_normalizer.inverse_transform(np.array(out_cat_list)[:,col].astype(int))
+        df[float_cols[col]]=transformed_data
+        #print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
+
+    sys.exit()
+    #labels=[0 for i in range(len(train_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
+
+    #print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
+    #precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
+    #print("AUPR: {}".format(metrics.auc(recall, precision)))
 
 y=torch.Tensor(np.ones(X_train.shape[0]))
 X_train=X_train.astype('float64')
@@ -295,4 +303,4 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 for epoch in range( 50):
     train(epoch, )
     #if epoch%5==0 :
-        #best_loss=test(epoch, best_loss)
+    best_loss=test(epoch, best_loss)
