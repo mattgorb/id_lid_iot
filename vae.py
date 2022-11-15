@@ -272,6 +272,7 @@ def test(epoch, best_loss ):
     for col in range(len(float_cols)):
         data_normalizer = preprocess.encoders[float_cols[col]]['encoder']
         transformed_data=data_normalizer.inverse_transform(np.array(out_cont_list)[:,col].reshape(-1,1))
+        print(transformed_data.shape)
         df[float_cols[col]]=transformed_data
 
     for col in range(len(categorical_cols)):
