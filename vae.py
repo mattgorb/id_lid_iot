@@ -243,7 +243,7 @@ def test(epoch, best_loss ):
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
 
-        output=np.array([])
+        output=np.array([[]])
         for cat in cat_outs:
             pred = cat.argmax(dim=1, keepdim=False)
             print(pred)
