@@ -243,8 +243,8 @@ def test(epoch, best_loss ):
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
 
-        out_cat_list.extend(cat_outs)
-        out_cont_list.extend(out_cont)
+        out_cat_list.extend(cat_outs.cpu().detach().numpy())
+        out_cont_list.extend(out_cont.cpu().detach().numpy())
 
     print("HeEREE")
     print(np.array(out_cat_list).shape)
