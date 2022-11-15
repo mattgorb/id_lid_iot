@@ -280,7 +280,7 @@ def test(epoch, best_loss ):
 
         data_normalizer=preprocess.encoders[categorical_cols[col]]['encoder']
         transformed_data=data_normalizer.inverse_transform(np.array(out_cat_list)[:,col].astype(int))
-        df[float_cols[col]]=transformed_data[:,0]
+        df[categorical_cols[col]]=transformed_data[:,0]
         #print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
     df.to_csv("test.csv")
     sys.exit()
