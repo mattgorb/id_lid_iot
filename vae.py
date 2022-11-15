@@ -63,7 +63,7 @@ if dataset=='ton_iot':
     benign_np, preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
     mal_np=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
 
-    run_benign=True
+    run_benign=False
     if run_benign:
         X_train, X_test =benign_np, benign_np
     else:
