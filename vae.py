@@ -276,8 +276,7 @@ def test(best_loss ):
         df.to_csv(f"{base_dir}/vae/benign_{run_benign}.csv")
 
         #randomly sample gaussian for synthetic examples.
-        print(len(train_dataloader))
-        sys.exit()
+
         for i in range(len(train_dataloader)):
             #data = data.to(device)
             sample = torch.randn(128, 64).to(device)
