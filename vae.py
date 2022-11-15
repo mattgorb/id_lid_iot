@@ -252,7 +252,7 @@ def test(epoch, best_loss ):
             if output is None:
                 output=pred
             else:
-                output=torch.cat([output,pred], dim=1  )
+                output=torch.cat([output,pred], dim=0  )
         print(output.size())
         sys.exit()
         print(cat_outs)
