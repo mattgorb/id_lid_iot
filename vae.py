@@ -220,15 +220,12 @@ def train(epoch, ):
         optimizer.step()
 
 
-
-    print('====> Epoch: {} Average loss: {:.4f}'.format(
-          epoch, train_loss / len(train_dataloader.dataset)))
     info = {
         'loss': train_loss/len(train_dataloader.dataset),
         'recon_loss': recon_loss/len(train_dataloader.dataset),
         'kld': kld_loss/len(train_dataloader.dataset)
     }
-    print(f"====> Epoch {epoch}: \n{info}")
+    print(f"====> Epoch {epoch}: {info}")
 
 
 def test(best_loss ):
