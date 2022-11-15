@@ -279,7 +279,7 @@ def test(best_loss ):
 
         for i in range(len(train_dataloader)):
             #data = data.to(device)
-            sample = torch.randn(128, 64).to(device)
+            sample = torch.randn(256, 64).to(device)
             sample = model.decode(sample).cpu()
 
             out_cont, cat_outs, mu, logvar = model(sample)
