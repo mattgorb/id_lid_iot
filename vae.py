@@ -243,9 +243,13 @@ def test(epoch, best_loss ):
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
 
+        output=np.array([])
         for cat in cat_outs:
-            pred = cat.argmax(dim=1, keepdim=True)
+            pred = cat.argmax(dim=1, keepdim=False)
             print(pred)
+            print(pred.size())
+            output=np.concatenate([output,pred.cpu().detach().numpy()], axis=1  )
+        print(output.shape)
         sys.exit()
         print(cat_outs)
         sys.exit()
