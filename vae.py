@@ -62,12 +62,14 @@ if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
     benign_np, preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
     mal_np=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
-    #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
-    X_train, X_test =benign_np, benign_np
+
+    run_benign=True
+    if run_benign:
+        X_train, X_test =benign_np, benign_np
+    else:
+        X_train, X_test = mal_np, mal_np
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
-
-
 
 
     for col in range(len(categorical_cols)):
@@ -229,7 +231,7 @@ def train(epoch, ):
     print(f"====> Epoch {epoch}: \n{info}")
 
 
-def test(epoch, best_loss ):
+def test(best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
@@ -257,38 +259,25 @@ def test(epoch, best_loss ):
         out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont.cpu().detach().numpy())
 
-    print("HeEREE")
-    print(np.array(out_cat_list).shape)
-    print(np.array(out_cont_list).shape)
-    '''for batch_idx, (data, _) in enumerate(malicious_dataloader):
-        data = data.to(device)
+    loss=np.mean(np.array(losses))
+    if loss<best_loss:
+        best_loss=loss
+        df=pd.DataFrame()
+        for col in range(len(float_cols)):
+            data_normalizer = preprocess.encoders[float_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cont_list)[:,col].reshape(-1,1))
 
-        out_cont, cat_outs = model(data)
-        loss = loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
-        losses.extend(loss.cpu().detach().numpy())'''
-    print('loss')
-    print(np.mean(np.array(losses)))
-    df=pd.DataFrame()
-    for col in range(len(float_cols)):
-        data_normalizer = preprocess.encoders[float_cols[col]]['encoder']
-        transformed_data=data_normalizer.inverse_transform(np.array(out_cont_list)[:,col].reshape(-1,1))
-        print(transformed_data[:,0].shape)
-        print(float_cols[col])
-        df[float_cols[col]]=transformed_data[:,0]
+            df[float_cols[col]]=transformed_data[:,0]
 
-    for col in range(len(categorical_cols)):
+        for col in range(len(categorical_cols)):
+            data_normalizer=preprocess.encoders[categorical_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cat_list)[:,col].astype(int))
+            df[categorical_cols[col]]=transformed_data
+            #print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
+        df.to_csv(f"{base_dir}/vae/benign_{run_benign}.csv")
 
-        data_normalizer=preprocess.encoders[categorical_cols[col]]['encoder']
-        transformed_data=data_normalizer.inverse_transform(np.array(out_cat_list)[:,col].astype(int))
-        df[categorical_cols[col]]=transformed_data
-        #print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
-    df.to_csv("test.csv")
-    sys.exit()
-    #labels=[0 for i in range(len(train_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
+    return best_loss
 
-    #print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
-    #precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
-    #print("AUPR: {}".format(metrics.auc(recall, precision)))
 
 y=torch.Tensor(np.ones(X_train.shape[0]))
 X_train=X_train.astype('float64')
@@ -315,5 +304,4 @@ model = model.to(device)
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 for epoch in range( 50):
     train(epoch, )
-    #if epoch%5==0 :
-    best_loss=test(epoch, best_loss)
+    best_loss=test( best_loss)
