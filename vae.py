@@ -247,12 +247,12 @@ def test(epoch, best_loss ):
 
         for cat in cat_outs:
             pred = cat.argmax(dim=1, keepdim=False)
-            print(pred)
-            print(pred.size())
+
             if output is None:
-                output=torch.unsqueeze(pred, dim=0)
+                output=torch.unsqueeze(pred, dim=1)
             else:
                 output=torch.cat([output,pred], dim=1  )
+            print(output.size())
         print(output.size())
         sys.exit()
         print(cat_outs)
