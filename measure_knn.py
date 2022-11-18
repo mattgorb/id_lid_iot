@@ -50,6 +50,31 @@ elif dataset=='nf_bot_iot':
 
     print(X_train.shape)
 
+elif dataset=='unsw_nb15':
+    from data_preprocess.drop_columns import unsw_n15
+    benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+    benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv',  unsw_n15.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np_test
+
+    if weights:
+        feature_weights=calculate_weights(X_train)
+    else:
+        feature_weights=None
+
+
+elif dataset=='kaggle_nid':
+    from data_preprocess.drop_columns import kaggle_nid
+    benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np
+
+    if weights:
+        feature_weights=calculate_weights(X_train)
+    else:
+        feature_weights=None
+
 def save_lids(pairwise_distances,k, file_name):
     knns = calculate_knn(pairwise_distances, k_=k)
     if a==0:
