@@ -13,8 +13,8 @@ print('LID Scores')
 in_dist_lids=pd.read_csv('results/results/ton_iot_benign_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=pd.read_csv('results/results/ton_iot_mal_lids_expanded_'+str(k)+'.csv')['value'].values
 
-df_benign=pd.read_csv('results/results/ton_iot_benign_lids_expanded_5.csv')
-df_mal=pd.read_csv('results/results/ton_iot_mal_lids_expanded_5.csv')
+df_benign=pd.read_csv('old/results/results/ton_iot_benign_lids_expanded_5.csv')
+df_mal=pd.read_csv('old/results/results/ton_iot_mal_lids_expanded_5.csv')
 #df_mal=pd.read_csv('results/nf_mal_lids_5_with_attack.csv')
 
 
@@ -57,8 +57,8 @@ for attack in attacks:
 
 
 
-df_benign=pd.read_csv('results2/iot23_benign_lids_expanded_3.csv')
-df_mal=pd.read_csv('results2/iot23_mal_lids_expanded_3.csv')
+df_benign=pd.read_csv('old/results2/iot23_benign_lids_expanded_3.csv')
+df_mal=pd.read_csv('old/results2/iot23_mal_lids_expanded_3.csv')
 
 
 

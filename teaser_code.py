@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 df_benign=list(np.loadtxt('results2/nf_bot_iot_benign_lids_5.txt'))
 
-df_mal=pd.read_csv('results2/nf_bot_5_attacks.csv')
+df_mal=pd.read_csv('old/results2/nf_bot_5_attacks.csv')
 
 #print(metrics.roc_auc_score(labels, ood_lids+in_dist_lids))
 #precision, recall, thresholds = metrics.precision_recall_curve(labels, ood_lids+in_dist_lids)

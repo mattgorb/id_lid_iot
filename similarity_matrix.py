@@ -49,14 +49,14 @@ if save_knns:
 
     #np.savetxt("results/knns.csv", np.array(knns), delimiter=",")
     #np.savetxt("results/knns_mal.csv", np.array(knns_mal), delimiter=",")
-    np.save("results/knns.npy", np.array(knns))
-    np.save("results/knns_mal.npy", np.array(knns_mal))
+    np.save("old/results/knns.npy", np.array(knns))
+    np.save("old/results/knns_mal.npy", np.array(knns_mal))
 else:
     #knns=np.loadtxt("results/knns.npy",  delimiter=",")
     #knns_mal=np.loadtxt("results/knns_mal.npy",  delimiter=",")
 
-    knns=np.load("results/knns.npy")
-    knns_mal=np.load("results/knns_mal.npy")
+    knns=np.load("old/results/knns.npy")
+    knns_mal=np.load("old/results/knns_mal.npy")
 
     print(knns)
     print(knns_mal.shape)
