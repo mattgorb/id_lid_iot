@@ -76,13 +76,14 @@ if dataset=='ton_iot':
         n_cats = preprocess.encoders[categorical_cols[col]]['n_classes']#len(preprocess.encoders[categorical_cols[col]]['encoder'].classes_)
 
         embed_dim = compute_embedding_size(n_cats)
+        print(categorical_cols[col])
         print(n_cats)
         print(embed_dim)
         embed_layer = torch.nn.Embedding(n_cats, embed_dim).to(device)
         embeddings.append(embed_layer)
         input_dim += embed_dim
         cat_out.append(n_cats)
-
+    sys.exit()
     input_dim+=cont_dim
     #print(input_dim)
 elif dataset=='iot23':
