@@ -89,8 +89,6 @@ batch_size=1000
 for a in range(0, X_test.shape[0], batch_size):
     sample= X_test[a:a + batch_size, :]
 
-    print(sample.shape)
-    print(X_train.shape)
 
 
 
