@@ -62,13 +62,13 @@ elif dataset=='kaggle_nid':
     feature_weights=calculate_weights(X_train)
 
 
-full = np.concatenate([benign_np, mal_np], axis=0)
+full = np.concatenate([X_test, mal_np], axis=0)
 contamination_rate=mal_np.shape[0]/full.shape[0]
 clf = IsolationForest(random_state=0, contamination=contamination_rate).fit(full)
 
 full_pred=clf.decision_function(full)
 #mal_pred=clf.predict(full_mal)
-labels=[-1 for i in benign_np]+[1 for i in mal_np]
+labels=[-1 for i in X_test]+[1 for i in mal_np]
 preds=list(full_pred)
 print(roc_auc_score(labels, preds))
 precision, recall, thresholds = metrics.precision_recall_curve(labels, preds)
