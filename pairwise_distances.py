@@ -47,13 +47,12 @@ def batch_distances(test_data, train_data, batch_size=1000,  weights=None, train
     all_distances=[]
     for a in range(0, test_data.shape[0], batch_size):
         sample= test_data[a:a + batch_size, :]
-        print(sample.shape)
-        print(train_data.shape)
+
         if weights is not None:
             total_distance = cdist(sample, train_data, metric='hamming', w=weights)
         else:
             total_distance = cdist(sample, train_data, metric='hamming', )
-        sys.exit()
+
         if sort_==False:
             return total_distance
 
