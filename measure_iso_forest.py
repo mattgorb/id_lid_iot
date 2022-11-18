@@ -7,7 +7,7 @@ from sklearn.ensemble import IsolationForest
 from data_setup import df_to_np, calculate_weights
 
 
-dataset='ton_iot'
+dataset='unsw_nb15'
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
     benign_np=df_to_np('csv/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)
@@ -42,6 +42,24 @@ elif dataset=='nf_bot_iot':
     feature_weights=calculate_weights(X_train)
 
     print(X_train.shape)
+
+elif dataset=='unsw_nb15':
+    from data_preprocess.drop_columns import unsw_n15
+    benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+    benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv',  unsw_n15.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np_test
+
+    X_train = X_train.astype('float64')
+
+elif dataset=='kaggle_nid':
+    from data_preprocess.drop_columns import kaggle_nid
+    benign_np =df_to_np('csv/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
+    mal_np=df_to_np('csv/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np
+
+    feature_weights=calculate_weights(X_train)
 
 
 full = np.concatenate([benign_np, mal_np], axis=0)

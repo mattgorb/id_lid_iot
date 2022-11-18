@@ -253,6 +253,7 @@ def test(epoch, best_loss ):
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
         print("HERE")
         print(loss)
+
         losses.extend(loss.cpu().detach().numpy())
 
     labels=[0 for i in range(len(train_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
