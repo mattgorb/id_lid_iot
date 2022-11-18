@@ -91,7 +91,7 @@ for a in range(0, X_test.shape[0], batch_size):
 
     print(sample.shape)
     print(X_train.shape)
-    sys.exit()
+
 
 
     pairwise_distances=batch_distances(sample, X_train, weights=None, batch_size=batch_size)
