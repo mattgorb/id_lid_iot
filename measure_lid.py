@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-dataset='ton_iot'
+dataset='kaggle_nid'
 directory='/s/luffy/b/nobackup/mgorb/iot/'
 #directory='csv/'
 if dataset=='ton_iot':
@@ -78,6 +78,25 @@ elif dataset=='nf_bot_iot':
     print(benign_ips_attacks.shape)
     print(mal_np.shape)
     print(mal_ips_attacks.shape)
+
+
+elif dataset=='unsw_nb15':
+    from data_preprocess.drop_columns import unsw_n15
+    benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+    benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv',  unsw_n15.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np_test
+
+    feature_weights=calculate_weights(X_train)
+
+elif dataset=='kaggle_nid':
+    from data_preprocess.drop_columns import kaggle_nid
+    benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np
+
+    feature_weights=calculate_weights(X_train)
 
 
 def save_lids(pairwise_distances,k, sample_details,file_name):
