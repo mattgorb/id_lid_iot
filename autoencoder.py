@@ -249,7 +249,9 @@ def test(epoch, best_loss ):
         data = data.to(device)
 
         out_cont, cat_outs = model(data)
+        print("HERE")
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
+        print("HERE")
         print(loss)
         losses.extend(loss.cpu().detach().numpy())
 
