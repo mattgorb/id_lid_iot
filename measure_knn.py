@@ -4,7 +4,7 @@ from util.knn import calculate_knn
 from sklearn import metrics
 
 dataset='unsw_nb15'
-weights=False
+weights=True
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
     benign_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)

@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-k=10
-in_dist_lids=list(np.loadtxt('results/results/ton_iot_benign_knns_unweighted_'+str(k)+'.txt'))
-ood_lids=    list(np.loadtxt('results/results/ton_iot_mal_knns_unweighted_'+str(k)+'.txt'))
+k=5
+in_dist_lids=list(np.loadtxt('results/kaggle_nid_benign_knns_unweighted_'+str(k)+'.txt'))
+ood_lids=    list(np.loadtxt('results/kaggle_nid_mal_knns_unweighted_'+str(k)+'.txt'))
 #in_dist_lids=pd.read_csv('results/results/ton_iot_benign_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=pd.read_csv('results/results/ton_iot_mal_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=list(ood_lids)
@@ -23,6 +23,7 @@ print(metrics.roc_auc_score(labels, list(ood_lids)+list(in_dist_lids)))
 precision, recall, thresholds = metrics.precision_recall_curve(labels, list(ood_lids)+list(in_dist_lids))
 print(metrics.auc(recall, precision))
 
+sys.exit()
 
 print('KNN weighted Scores')
 
