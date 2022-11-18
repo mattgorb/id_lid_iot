@@ -89,6 +89,11 @@ batch_size=1000
 for a in range(0, X_test.shape[0], batch_size):
     sample= X_test[a:a + batch_size, :]
 
+    print(sample.shape)
+    print(X_train.shape)
+    sys.exit()
+
+
     pairwise_distances=batch_distances(sample, X_train, weights=None, batch_size=batch_size)
     save_lids(pairwise_distances,3, str(dataset)+'_benign_knns_unweighted_')
     save_lids(pairwise_distances,5, str(dataset)+'_benign_knns_unweighted_')
