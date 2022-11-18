@@ -64,8 +64,8 @@ elif dataset=='kaggle_nid':
 
 full = np.concatenate([X_test, mal_np], axis=0)
 contamination_rate=mal_np.shape[0]/full.shape[0]
-clf = IsolationForest(random_state=0, contamination=contamination_rate).fit(full)
-
+#clf = IsolationForest(random_state=0, contamination=contamination_rate).fit(full)
+clf = IsolationForest(random_state=0, ).fit(full)
 full_pred=clf.decision_function(full)
 #mal_pred=clf.predict(full_mal)
 labels=[-1 for i in X_test]+[1 for i in mal_np]
