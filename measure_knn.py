@@ -3,7 +3,7 @@ from data_setup import df_to_np, calculate_weights
 from util.knn import calculate_knn
 from sklearn import metrics
 
-dataset='unsw_nb15'
+dataset='kaggle_nid'
 weights=True
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot

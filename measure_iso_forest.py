@@ -1,7 +1,7 @@
 import pandas as pd
 from data_preprocess.preprocess import Preprocess
 from pairwise_distances import *
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, f1_score
 from sklearn import metrics
 from sklearn.ensemble import IsolationForest
 from data_setup import df_to_np, calculate_weights
@@ -70,8 +70,8 @@ full_pred=clf.decision_function(full)
 #mal_pred=clf.predict(full_mal)
 labels=[-1 for i in X_test]+[1 for i in mal_np]
 preds=list(full_pred)
+print("ROC")
 print(roc_auc_score(labels, preds))
 precision, recall, thresholds = metrics.precision_recall_curve(labels, preds)
+print("PR")
 print(metrics.auc(recall, precision))
-
-

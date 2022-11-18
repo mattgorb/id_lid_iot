@@ -249,10 +249,7 @@ def test(epoch, best_loss ):
         data = data.to(device)
 
         out_cont, cat_outs = model(data)
-        print("HERE")
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
-        print("HERE")
-        print(loss)
 
         losses.extend(loss.cpu().detach().numpy())
 
@@ -261,6 +258,7 @@ def test(epoch, best_loss ):
     print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
     precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
     print("AUPR: {}".format(metrics.auc(recall, precision)))
+
 
 y=torch.Tensor(np.ones(X_train.shape[0]))
 X_train=X_train.astype('float64')
