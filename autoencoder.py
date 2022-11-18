@@ -49,13 +49,15 @@ def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
     return int(val)
 
-dataset='ton_iot'
+dataset='unsw_nb15'
 weights=False
 
 embeddings=[]
 cat_out=[]
 cont_dim=0
 input_dim=0
+
+#directory=
 
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
@@ -120,7 +122,33 @@ elif dataset=='nf_bot_iot':
 
     input_dim+=cont_dim
 
+elif dataset=='unsw_nb15':
+    from data_preprocess.drop_columns import unsw_n15
+    benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/UNSW_NB15_training-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+    benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
 
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/UNSW_NB15_testing-set.csv',  unsw_n15.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np_test
+
+    X_train = X_train.astype('float64')
+    cont_dim=len(float_cols)
+    for col in range(len(categorical_cols)):
+        n_cats = preprocess.encoders[categorical_cols[col]]['n_classes']#len(preprocess.encoders[categorical_cols[col]]['encoder'].classes_)
+
+        embed_dim = compute_embedding_size(n_cats)
+        embed_layer = torch.nn.Embedding(n_cats, embed_dim).to(device)
+        embeddings.append(embed_layer)
+        input_dim += embed_dim
+        cat_out.append(n_cats)
+
+    input_dim+=cont_dim
+elif dataset=='kaggle_nid':
+    from data_preprocess.drop_columns import kaggle_nid
+    benign_np =df_to_np('csv/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
+    mal_np=df_to_np('csv/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np
+
+    feature_weights=calculate_weights(X_train)
 
 
 
