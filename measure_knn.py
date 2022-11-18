@@ -83,7 +83,7 @@ for a in range(0, X_test.shape[0], batch_size):
 
 
 
-    pairwise_distances=batch_distances(sample, X_train, weights=None, batch_size=batch_size)
+    pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size)
     save_lids(pairwise_distances,3, str(dataset)+'_benign_knns_weighted_')
     save_lids(pairwise_distances,5, str(dataset)+'_benign_knns_weighted_')
     save_lids(pairwise_distances,10, str(dataset)+'_benign_knns_weighted_')
@@ -96,7 +96,7 @@ for a in range(0, mal_np.shape[0], batch_size):
 
     sample= mal_np[a:a + batch_size, :]
     #pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size, train_set=False)
-    pairwise_distances = batch_distances(sample, X_train, weights=None, batch_size=batch_size,
+    pairwise_distances = batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size,
                                          train_set=False)
     save_lids(pairwise_distances,3, str(dataset)+'_mal_knns_weighted_')
     save_lids(pairwise_distances,5, str(dataset)+'_mal_knns_weighted_')

@@ -4,8 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 k=20
-in_dist_lids=list(np.loadtxt('results/unsw_nb15_benign_knns_unweighted_'+str(k)+'.txt'))
-ood_lids=    list(np.loadtxt('results/unsw_nb15_mal_knns_unweighted_'+str(k)+'.txt'))
+in_dist_lids=list(np.loadtxt('results/unsw_nb15_benign_knns_weighted_'+str(k)+'.txt'))
+ood_lids=    list(np.loadtxt('results/unsw_nb15_mal_knns_weighted_'+str(k)+'.txt'))
 #in_dist_lids=pd.read_csv('results/results/ton_iot_benign_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=pd.read_csv('results/results/ton_iot_mal_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=list(ood_lids)
