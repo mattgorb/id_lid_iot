@@ -90,6 +90,17 @@ elif dataset=='unsw_nb15':
 
     feature_weights=calculate_weights(X_train)
 
+    df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv')
+    df_benign = df[df['Label'] == 0]
+    idxs=[ 'attack_cat']
+    benign_ips_attacks = df_benign[idxs].to_numpy()
+
+    df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv')
+    df_benign = df[df['Label'] == 1]
+    idxs=[ 'attack_cat']
+    mal_ips_attacks = df_benign[idxs].to_numpy()
+
+
 elif dataset=='kaggle_nid':
     from data_preprocess.drop_columns import kaggle_nid
     benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
@@ -97,6 +108,17 @@ elif dataset=='kaggle_nid':
     X_train, X_test =benign_np, benign_np
 
     feature_weights=calculate_weights(X_train)
+
+
+    df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv')
+    df_benign = df[df['class'] == 0]
+    idxs=[ 'attack_cat']
+    benign_ips_attacks = df_benign[idxs].to_numpy()
+
+    df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv')
+    df_benign = df[df['class'] == 1]
+    idxs=[ 'attack_cat']
+    mal_ips_attacks = df_benign[idxs].to_numpy()
 
 
 def save_lids(pairwise_distances,k, sample_details,file_name):
