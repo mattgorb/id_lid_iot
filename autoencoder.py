@@ -49,7 +49,7 @@ def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
     return int(val)
 
-dataset='unsw_nb15'
+dataset='kaggle_nid'
 weights=False
 
 embeddings=[]
@@ -255,20 +255,20 @@ def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
-    '''for batch_idx, (data, _) in enumerate(train_dataloader):
+    for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
-        losses.extend(loss.cpu().detach().numpy())'''
+        losses.extend(loss.cpu().detach().numpy())
 
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
 
-
-        out_cont, cat_outs = model.forward2(data)
-        print(out_cont.size())
+        out_cont, cat_outs = model(data)
+        #out_cont, cat_outs = model.forward2(data)
+        #print(out_cont.size())
         #print(out_cont)
-        sys.exit()
+        #sys.exit()
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
 
         losses.extend(loss.cpu().detach().numpy())
