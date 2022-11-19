@@ -127,21 +127,18 @@ elif dataset=='unsw_nb15':
     benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
     benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
 
-    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv',  unsw_n15.datatypes,train_set=False)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
     for col in range(len(categorical_cols)):
         n_cats = preprocess.encoders[categorical_cols[col]]['n_classes']#len(preprocess.encoders[categorical_cols[col]]['encoder'].classes_)
-        print(col)
-        print(n_cats)
         embed_dim = compute_embedding_size(n_cats)
         embed_layer = torch.nn.Embedding(n_cats, embed_dim).to(device)
         embeddings.append(embed_layer)
         input_dim += embed_dim
         cat_out.append(n_cats)
-    sys.exit()
     input_dim+=cont_dim
 
 elif dataset=='kaggle_nid':
