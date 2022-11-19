@@ -111,15 +111,19 @@ elif dataset=='kaggle_nid':
 
 
     df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv')
-    df_benign = df[df['class'] == 0]
+    df_benign = df[df['class'] == 'normal']
     idxs=[ 'class']
     benign_ips_attacks = df_benign[idxs].to_numpy()
 
     df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv')
-    df_benign = df[df['class'] == 1]
+    df_benign = df[df['class'] == 'anomaly']
     idxs=[ 'class']
     mal_ips_attacks = df_benign[idxs].to_numpy()
 
+    print(benign_np.shape)
+    print(benign_ips_attacks.shape)
+    print(mal_np.shape)
+    print(mal_ips_attacks.shape)
 
 def save_lids(pairwise_distances,k, sample_details,file_name):
     lids = np.expand_dims(np.array(calculate_lid(pairwise_distances, k_=k)), axis=1)
@@ -140,10 +144,7 @@ print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_siz
 for a in range(0, X_test.shape[0], batch_size):
     sample= X_test[a:a + batch_size, :]
     sample_details = benign_ips_attacks[a:a + batch_size, :]
-    print(sample.shape)
-    print(sample_details.shape)
 
-    sys.exit()
     pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size)
     save_lids(pairwise_distances,3,sample_details, str(dataset)+'_benign_lids_expanded_')
     save_lids(pairwise_distances,5,sample_details, str(dataset)+'_benign_lids_expanded_')
