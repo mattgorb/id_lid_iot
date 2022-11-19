@@ -67,8 +67,8 @@ input_dim=0
 
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
-    benign_np, preprocess, float_cols, categorical_cols=df_to_np('csv/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
-    mal_np=df_to_np('csv/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
+    benign_np, preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
 
     test_split=int(benign_np.shape[0]*.8)
@@ -115,8 +115,8 @@ elif dataset=='iot23':
     input_dim+=cont_dim
 elif dataset=='nf_bot_iot':
     from data_preprocess.drop_columns import nf_bot_iot
-    benign_np , preprocess, float_cols, categorical_cols=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
-    mal_np=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
+    benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
 
     test_split=int(benign_np.shape[0]*.8)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
@@ -220,21 +220,7 @@ class AE(nn.Module):
         inputs=torch.cat([embedded_cats.float(),x[:,:num_fts].float()], dim=1)
         z = self.encode(inputs)
         return self.decode(z)
-    def forward2(self, x):
-        num_fts=x.size(1)-len(self.embeddings)
-        embed_list=[]#torch.nn.ModuleList()
-        for embed in range(len(self.embeddings)):
-            print(x[:,num_fts+embed].long().size())
-            print(x[:,num_fts+embed].long())
-            print(self.embeddings[embed])
-            sys.exit()
-            out=self.embeddings[embed](x[:,num_fts+embed].long())
-            embed_list.append(out)
 
-        embedded_cats = torch.cat(embed_list, dim=1)
-        inputs=torch.cat([embedded_cats.float(),x[:,:num_fts].float()], dim=1)
-        z = self.encode(inputs)
-        return self.decode(z)
 
 
 # Reconstruction + KL divergence losses summed over all elements and batch
