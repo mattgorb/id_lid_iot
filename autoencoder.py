@@ -201,7 +201,7 @@ class AE(nn.Module):
 def loss_function(out_cont, cat_outs, data, reduction='sum'):
     loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
     if reduction=='none':
-        loss=torch.sum(loss, dim=1)
+        #loss=torch.sum(loss, dim=1)
         #print(loss)
         print(out_cont)
         print(data[:,:out_cont.size(1)])
@@ -262,7 +262,8 @@ def test(epoch, best_loss ):
         data = data.to(device)
 
         out_cont, cat_outs = model(data)
-
+        print(out_cont)
+        sys.exit()
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
 
         losses.extend(loss.cpu().detach().numpy())
