@@ -145,7 +145,7 @@ elif dataset=='unsw_nb15':
 
 elif dataset=='kaggle_nid':
     from data_preprocess.drop_columns import kaggle_nid
-    benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
+    benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
 
