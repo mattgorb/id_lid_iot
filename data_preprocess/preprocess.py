@@ -45,7 +45,7 @@ class Preprocess():
                 return 'categorical'
 
 
-        if 'label' in self.datatypes:
+        '''if 'label' in self.datatypes:
             temp_df=self.df[self.df['label']==0]
 
         elif 'Label' in self.datatypes:
@@ -54,8 +54,8 @@ class Preprocess():
             temp_df = self.df[self.df['class'].str.lower() == 'normal']
         elif 'label string' in self.datatypes:
             temp_df=self.df[self.df['label string'].str.lower()=='benign']
-        else:
-            temp_df=self.df
+        else:'''
+        temp_df=self.df
 
         for col in self.df.columns:
             type_=preprocess_type(col)
