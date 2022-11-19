@@ -32,6 +32,9 @@ parser.add_argument('--log-interval', type=int, default=250, metavar='N',
 parser.add_argument('--prior', type=str, default='standard', metavar='N',
                     help='prior')
 
+parser.add_argument('--dataset', type=str, default=None, metavar='N',
+                    help='prior')
+
 args = parser.parse_args()
 
 
@@ -49,7 +52,8 @@ def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
     return int(val)
 
-dataset='kaggle_nid'
+#dataset is an input arg now
+#dataset='kaggle_nid'
 weights=False
 
 embeddings=[]
@@ -64,7 +68,10 @@ if dataset=='ton_iot':
     benign_np, preprocess, float_cols, categorical_cols=df_to_np('csv/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
     mal_np=df_to_np('csv/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
-    X_train, X_test =benign_np, benign_np
+
+    test_split=int(benign_np.shape[0]*.8)
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
     for col in range(len(categorical_cols)):
@@ -88,7 +95,8 @@ elif dataset=='iot23':
     X_train, X_test = benign_np, benign_np
     feature_weights = calculate_weights(X_train)
 
-    X_train, X_test = benign_np, benign_np
+    test_split=int(benign_np.shape[0]*.8)
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -107,7 +115,9 @@ elif dataset=='nf_bot_iot':
     from data_preprocess.drop_columns import nf_bot_iot
     benign_np , preprocess, float_cols, categorical_cols=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
-    X_train, X_test =benign_np, benign_np
+
+    test_split=int(benign_np.shape[0]*.8)
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -128,7 +138,9 @@ elif dataset=='unsw_nb15':
     #benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
 
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
-    X_train, X_test =benign_np, benign_np
+
+    test_split=int(benign_np.shape[0]*.8)
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -146,7 +158,7 @@ elif dataset=='kaggle_nid':
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
-    test_split=int(benign_np.shape[0]*.7)
+    test_split=int(benign_np.shape[0]*.8)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
 
     cont_dim=len(float_cols)
