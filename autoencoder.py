@@ -147,7 +147,9 @@ elif dataset=='kaggle_nid':
     from data_preprocess.drop_columns import kaggle_nid
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
-    X_train, X_test =benign_np, benign_np
+
+    test_split=int(benign_np.shape[0]*.8)
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
 
     cont_dim=len(float_cols)
     for col in range(len(categorical_cols)):
@@ -265,7 +267,7 @@ def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
-    for batch_idx, (data, _) in enumerate(train_dataloader):
+    for batch_idx, (data, _) in enumerate(test_dataloader):
         data = data.to(device)
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
@@ -292,11 +294,16 @@ def test(epoch, best_loss ):
 
 y=torch.Tensor(np.ones(X_train.shape[0]))
 X_train=X_train.astype('float64')
-
-
 x=torch.from_numpy(X_train)
 my_dataset = TensorDataset(x, y)
 train_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
+
+
+y=torch.Tensor(np.ones(X_test.shape[0]))
+X_test=X_test.astype('float64')
+x=torch.from_numpy(X_test)
+my_dataset = TensorDataset(x, y)
+test_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
 
 y=torch.Tensor(np.ones(mal_np.shape[0]))
 mal_np=mal_np.astype('float64')
