@@ -144,8 +144,8 @@ elif dataset=='unsw_nb15':
     input_dim+=cont_dim
 elif dataset=='kaggle_nid':
     from data_preprocess.drop_columns import kaggle_nid
-    benign_np =df_to_np('csv/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
-    mal_np=df_to_np('csv/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
+    benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
 
     feature_weights=calculate_weights(X_train)
