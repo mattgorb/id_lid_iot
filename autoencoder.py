@@ -251,18 +251,21 @@ def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
-    '''for batch_idx, (data, _) in enumerate(train_dataloader):
+    for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
-
+        print(data.size())
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
-        losses.extend(loss.cpu().detach().numpy())'''
-
+        losses.extend(loss.cpu().detach().numpy())
+        break
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
+        print(data)
+
+        print(data.size())
 
         out_cont, cat_outs = model(data)
-        print(out_cont)
+        #print(out_cont)
         sys.exit()
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
 
