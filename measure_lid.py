@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-dataset='kaggle_nid'
+dataset='unsw_nb15'
 directory='/s/luffy/b/nobackup/mgorb/iot/'
 #directory='csv/'
 if dataset=='ton_iot':
