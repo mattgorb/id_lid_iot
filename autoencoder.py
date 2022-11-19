@@ -203,8 +203,8 @@ def loss_function(out_cont, cat_outs, data, reduction='sum'):
     if reduction=='none':
         loss=torch.sum(loss, dim=1)
         #print(loss)
-        print(out_cont.double())
-        print(data[:,:out_cont.size(1)].double())
+        print(out_cont)
+        print(data[:,:out_cont.size(1)])
         sys.exit()
         print('hererre')
         for cat in range(len(cat_outs)):
