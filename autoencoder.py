@@ -49,7 +49,7 @@ def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
     return int(val)
 
-dataset='kaggle_nid'
+dataset='unsw_nb15'
 weights=False
 
 embeddings=[]
@@ -128,7 +128,7 @@ elif dataset=='unsw_nb15':
     benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
 
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv',  unsw_n15.datatypes,train_set=False)
-    X_train, X_test =benign_np, benign_np_test
+    X_train, X_test =benign_np, benign_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
