@@ -200,6 +200,9 @@ class AE(nn.Module):
         embed_list=[]#torch.nn.ModuleList()
         for embed in range(len(self.embeddings)):
             print(x[:,num_fts+embed].long().size())
+            print(x[:,num_fts+embed].long())
+            print(self.embeddings[embed])
+            sys.exit()
             out=self.embeddings[embed](x[:,num_fts+embed].long())
             embed_list.append(out)
 
@@ -213,20 +216,9 @@ class AE(nn.Module):
 def loss_function(out_cont, cat_outs, data, reduction='sum'):
     loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
     if reduction=='none':
-        #loss=torch.sum(loss, dim=1)
-        #print(loss)
-        print(out_cont)
-        print(data[:,:out_cont.size(1)])
-        sys.exit()
-        print('hererre')
-        for cat in range(len(cat_outs)):
-            target = data[:, out_cont.size(1) + cat].long()
-            cat_loss = F.cross_entropy(cat_outs[cat], target, reduction=reduction)
-            print(cat)
-            print(cat_loss)
-            loss +=cat_loss
+        loss=torch.sum(loss, dim=1)
         print(loss)
-        sys.exit()
+
     for cat in range(len(cat_outs)):
         target=data[:,out_cont.size(1)+cat].long()
         loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
