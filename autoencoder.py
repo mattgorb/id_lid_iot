@@ -195,6 +195,18 @@ class AE(nn.Module):
         inputs=torch.cat([embedded_cats.float(),x[:,:num_fts].float()], dim=1)
         z = self.encode(inputs)
         return self.decode(z)
+    def forward2(self, x):
+        num_fts=x.size(1)-len(self.embeddings)
+        embed_list=[]#torch.nn.ModuleList()
+        for embed in range(len(self.embeddings)):
+            print(x[:,num_fts+embed].long().size())
+            out=self.embeddings[embed](x[:,num_fts+embed].long())
+            embed_list.append(out)
+
+        embedded_cats = torch.cat(embed_list, dim=1)
+        inputs=torch.cat([embedded_cats.float(),x[:,:num_fts].float()], dim=1)
+        z = self.encode(inputs)
+        return self.decode(z)
 
 
 # Reconstruction + KL divergence losses summed over all elements and batch
@@ -251,21 +263,17 @@ def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
-    for batch_idx, (data, _) in enumerate(train_dataloader):
+    '''for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
-        print(data.size())
         out_cont, cat_outs = model(data)
-        print(out_cont.size())
-        #loss = loss_function(out_cont, cat_outs, data, reduction='none')
-        #losses.extend(loss.cpu().detach().numpy())
-        break
+        loss = loss_function(out_cont, cat_outs, data, reduction='none')
+        losses.extend(loss.cpu().detach().numpy())'''
+
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
-        print(data)
 
-        print(data.size())
 
-        out_cont, cat_outs = model(data)
+        out_cont, cat_outs = model.forward2(data)
         print(out_cont.size())
         print(out_cont)
         sys.exit()
