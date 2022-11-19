@@ -91,12 +91,12 @@ elif dataset=='unsw_nb15':
     feature_weights=calculate_weights(X_train)
 
     df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv')
-    df_benign = df[df['Label'] == 0]
+    df_benign = df[df['label'] == 0]
     idxs=[ 'attack_cat']
     benign_ips_attacks = df_benign[idxs].to_numpy()
 
     df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv')
-    df_benign = df[df['Label'] == 1]
+    df_benign = df[df['label'] == 1]
     idxs=[ 'attack_cat']
     mal_ips_attacks = df_benign[idxs].to_numpy()
 
@@ -112,12 +112,12 @@ elif dataset=='kaggle_nid':
 
     df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv')
     df_benign = df[df['class'] == 0]
-    idxs=[ 'attack_cat']
+    idxs=[ 'class']
     benign_ips_attacks = df_benign[idxs].to_numpy()
 
     df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv')
     df_benign = df[df['class'] == 1]
-    idxs=[ 'attack_cat']
+    idxs=[ 'class']
     mal_ips_attacks = df_benign[idxs].to_numpy()
 
 
