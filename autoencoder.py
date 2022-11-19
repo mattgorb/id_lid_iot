@@ -203,6 +203,14 @@ def loss_function(out_cont, cat_outs, data, reduction='sum'):
     if reduction=='none':
         loss=torch.sum(loss, dim=1)
         print(loss)
+        print('hererre')
+        for cat in range(len(cat_outs)):
+            target = data[:, out_cont.size(1) + cat].long()
+            cat_loss = F.cross_entropy(cat_outs[cat], target, reduction=reduction)
+            print(cat)
+            print(cat_loss)
+            loss +=cat_loss
+        print(loss)
         sys.exit()
     for cat in range(len(cat_outs)):
         target=data[:,out_cont.size(1)+cat].long()
@@ -240,12 +248,12 @@ def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
-    for batch_idx, (data, _) in enumerate(train_dataloader):
+    '''for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
 
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
-        losses.extend(loss.cpu().detach().numpy())
+        losses.extend(loss.cpu().detach().numpy())'''
 
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
