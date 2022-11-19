@@ -265,7 +265,7 @@ def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
-    for batch_idx, (data, _) in enumerate(train_dataloader):
+    for batch_idx, (data, _) in enumerate(test_dataloader):
         data = data.to(device)
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
@@ -283,7 +283,7 @@ def test(epoch, best_loss ):
 
         losses.extend(loss.cpu().detach().numpy())
 
-    labels=[0 for i in range(len(train_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
+    labels=[0 for i in range(len(test_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
 
     print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
     precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
@@ -297,11 +297,11 @@ my_dataset = TensorDataset(x, y)
 train_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
 
 
-'''y=torch.Tensor(np.ones(X_test.shape[0]))
+y=torch.Tensor(np.ones(X_test.shape[0]))
 X_test=X_test.astype('float64')
 x=torch.from_numpy(X_test)
 my_dataset = TensorDataset(x, y)
-test_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader'''
+test_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
 
 y=torch.Tensor(np.ones(mal_np.shape[0]))
 mal_np=mal_np.astype('float64')
