@@ -255,8 +255,9 @@ def test(epoch, best_loss ):
         data = data.to(device)
         print(data.size())
         out_cont, cat_outs = model(data)
-        loss = loss_function(out_cont, cat_outs, data, reduction='none')
-        losses.extend(loss.cpu().detach().numpy())
+        print(out_cont.size())
+        #loss = loss_function(out_cont, cat_outs, data, reduction='none')
+        #losses.extend(loss.cpu().detach().numpy())
         break
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
@@ -265,7 +266,7 @@ def test(epoch, best_loss ):
         print(data.size())
 
         out_cont, cat_outs = model(data)
-        #print(out_cont)
+        print(out_cont.size())
         sys.exit()
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
 
