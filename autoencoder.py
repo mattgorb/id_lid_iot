@@ -275,7 +275,7 @@ def test(epoch, best_loss ):
 
         out_cont, cat_outs = model.forward2(data)
         print(out_cont.size())
-        print(out_cont)
+        #print(out_cont)
         sys.exit()
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
 
