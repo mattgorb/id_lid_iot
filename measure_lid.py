@@ -124,6 +124,7 @@ elif dataset=='kaggle_nid':
 def save_lids(pairwise_distances,k, sample_details,file_name):
     lids = np.expand_dims(np.array(calculate_lid(pairwise_distances, k_=k)), axis=1)
 
+
     result=np.concatenate([lids, sample_details], axis=1)
     if a==0:
         df=pd.DataFrame( result, columns=['value']+idxs, )
@@ -139,6 +140,10 @@ print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_siz
 for a in range(0, X_test.shape[0], batch_size):
     sample= X_test[a:a + batch_size, :]
     sample_details = benign_ips_attacks[a:a + batch_size, :]
+    print(sample.shape)
+    print(sample_details.shape)
+
+    sys.exit()
     pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size)
     save_lids(pairwise_distances,3,sample_details, str(dataset)+'_benign_lids_expanded_')
     save_lids(pairwise_distances,5,sample_details, str(dataset)+'_benign_lids_expanded_')
