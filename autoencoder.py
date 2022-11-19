@@ -20,7 +20,7 @@ from sklearn import metrics
 parser = argparse.ArgumentParser(description='VAE MNIST Example')
 parser.add_argument('--batch-size', type=int, default=128, metavar='N',
                     help='input batch size for training (default: 128)')
-parser.add_argument('--epochs', type=int, default=250, metavar='N',
+parser.add_argument('--epochs', type=int, default=100, metavar='N',
                     help='number of epochs to train (default: 10)')
 parser.add_argument('--no-cuda', action='store_true', default=False,
                     help='disables CUDA training')
@@ -49,7 +49,7 @@ def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
     return int(val)
 
-dataset='unsw_nb15'
+dataset='kaggle_nid'
 weights=False
 
 embeddings=[]
@@ -125,7 +125,7 @@ elif dataset=='nf_bot_iot':
 elif dataset=='unsw_nb15':
     from data_preprocess.drop_columns import unsw_n15
     benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
-    benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+    #benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
 
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
@@ -146,7 +146,7 @@ elif dataset=='kaggle_nid':
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
-    test_split=int(benign_np.shape[0]*.8)
+    test_split=int(benign_np.shape[0]*.7)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
 
     cont_dim=len(float_cols)
