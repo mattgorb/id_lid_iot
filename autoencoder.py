@@ -310,6 +310,7 @@ my_dataset = TensorDataset(x, y)
 malicious_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
 
 print('Train dataset length: {}'.format(len(train_dataloader.dataset)))
+print('Test dataset length: {}'.format(len(test_dataloader.dataset)))
 print('Malicious dataset length: {}'.format(len(malicious_dataloader.dataset)))
 
 best_loss=1e6
