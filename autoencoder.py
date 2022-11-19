@@ -53,7 +53,9 @@ def compute_embedding_size(n_categories):
     return int(val)
 
 #dataset is an input arg now
-#dataset='kaggle_nid'
+dataset=args.dataset
+
+
 weights=False
 
 embeddings=[]
