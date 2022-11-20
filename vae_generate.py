@@ -16,6 +16,9 @@ from data_setup import df_to_np, calculate_weights
 from util.knn import calculate_knn
 from sklearn import metrics
 
+from pairwise_distances import *
+from data_setup import df_to_np, calculate_weights
+from util.lid import calculate_lid, calculate_exactmatch
 
 parser = argparse.ArgumentParser(description='VAE MNIST Example')
 parser.add_argument('--batch-size', type=int, default=128, metavar='N',
@@ -59,23 +62,23 @@ cont_dim=0
 input_dim=0
 
 base_dir='/s/luffy/b/nobackup/mgorb/iot'
+
+run_benign = True
+
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
     benign_np, preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
     mal_np=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
 
-    '''run_benign=True
+
     if run_benign:
         X_train, X_test =benign_np, benign_np
     else:
-        X_train, X_test = mal_np, mal_np'''
-
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    #X_train, X_test = benign_np, benign_np
+        X_train, X_test = mal_np, mal_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
+
 
 
     for col in range(len(categorical_cols)):
@@ -97,11 +100,11 @@ elif dataset=='iot23':
 
     mal_np = df_to_np( f'{base_dir}/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=False)
 
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    #X_train, X_test = benign_np, benign_np
+    if run_benign:
+        X_train, X_test =benign_np, benign_np
+    else:
+        X_train, X_test = mal_np, mal_np
 
-    feature_weights = calculate_weights(X_train)
 
 
     X_train = X_train.astype('float64')
@@ -122,9 +125,10 @@ elif dataset=='nf_bot_iot':
     benign_np , preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np(f'{base_dir}/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
 
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    #X_train, X_test = benign_np, benign_np
+    if run_benign:
+        X_train, X_test =benign_np, benign_np
+    else:
+        X_train, X_test = mal_np, mal_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -146,9 +150,10 @@ elif dataset=='unsw_nb15':
 
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
 
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    #X_train, X_test = benign_np, benign_np
+    if run_benign:
+        X_train, X_test =benign_np, benign_np
+    else:
+        X_train, X_test = mal_np, mal_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -166,9 +171,10 @@ elif dataset=='kaggle_nid':
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    #X_train, X_test = benign_np, benign_np
+    if run_benign:
+        X_train, X_test =benign_np, benign_np
+    else:
+        X_train, X_test = mal_np, mal_np
 
     cont_dim=len(float_cols)
     for col in range(len(categorical_cols)):
@@ -289,7 +295,7 @@ def test(best_loss ):
     out_cont_list=[]
     out_cat_list=[]
 
-    for batch_idx, (data, _) in enumerate(test_dataloader):
+    for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
 
         out_cont, cat_outs, mu, logvar = model(data)
@@ -308,13 +314,17 @@ def test(best_loss ):
         out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont.cpu().detach().numpy())
 
+    recon_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=1)
+    np.save('')
 
     out_cont_list=[]
     out_cat_list=[]
-    for batch_idx, (data, _) in enumerate(malicious_dataloader):
-        data = data.to(device)
+    for i in range(len(train_dataloader)):
 
-        out_cont, cat_outs, mu, logvar = model(data)
+        sample = torch.randn(256, 64).to(device)
+        out_cont, cat_outs = model.decode(sample)  # .cpu()
+
+
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
 
         losses.extend(loss.cpu().detach().numpy())
@@ -333,14 +343,94 @@ def test(best_loss ):
 
 
 
-    labels=[0 for i in range(len(test_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
 
-    print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
-    precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
-    print("AUPR: {}".format(metrics.auc(recall, precision)))
+    #sys.exit()
+'''
+def test_backup(best_loss ):
+    model.eval()
+    train_loss = 0
+    losses=[]
+
+    out_cont_list=[]
+    out_cat_list=[]
+
+    for batch_idx, (data, _) in enumerate(train_dataloader):
+        data = data.to(device)
+
+        out_cont, cat_outs, mu, logvar = model(data)
+        loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
+        losses.extend(loss.cpu().detach().numpy())
+
+        output=None
+        for cat in cat_outs:
+            pred = cat.argmax(dim=1, keepdim=False)
+
+            if output is None:
+                output=torch.unsqueeze(pred, dim=1)
+            else:
+                output=torch.cat([output,torch.unsqueeze(pred, dim=1)], dim=1  )
+
+        out_cat_list.extend(output.cpu().detach().numpy())
+        out_cont_list.extend(out_cont.cpu().detach().numpy())
+
+    loss=np.mean(np.array(losses))
+    if loss<best_loss:
+        best_loss=loss
+        df=pd.DataFrame()
+        for col in range(len(float_cols)):
+            data_normalizer = preprocess.encoders[float_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cont_list)[:,col].reshape(-1,1))
+
+            df[float_cols[col]]=transformed_data[:,0]
+
+        for col in range(len(categorical_cols)):
+            data_normalizer=preprocess.encoders[categorical_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cat_list)[:,col].astype(int))
+            df[categorical_cols[col]]=transformed_data
+            #print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
+        df.to_csv(f"{base_dir}/vae/benign_{run_benign}.csv")
+
+        #randomly sample gaussian for synthetic examples.
+        for i in range(len(train_dataloader)):
+            #data = data.to(device)
+            sample = torch.randn(256, 64).to(device)
+            out_cont, cat_outs = model.decode(sample)#.cpu()
+
+            #out_cont, cat_outs, mu, logvar = model(sample)
+            #loss, recon, kld = loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
+            #losses.extend(loss.cpu().detach().numpy())
+
+            output = None
+            for cat in cat_outs:
+                pred = cat.argmax(dim=1, keepdim=False)
+
+                if output is None:
+                    output = torch.unsqueeze(pred, dim=1)
+                else:
+                    output = torch.cat([output, torch.unsqueeze(pred, dim=1)], dim=1)
+
+            out_cat_list.extend(output.cpu().detach().numpy())
+            out_cont_list.extend(out_cont.cpu().detach().numpy())
+
+        df=pd.DataFrame()
+        for col in range(len(float_cols)):
+            data_normalizer = preprocess.encoders[float_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cont_list)[:,col].reshape(-1,1))
+
+            df[float_cols[col]]=transformed_data[:,0]
+
+        for col in range(len(categorical_cols)):
+            data_normalizer=preprocess.encoders[categorical_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cat_list)[:,col].astype(int))
+            df[categorical_cols[col]]=transformed_data
+            #print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
+        df.to_csv(f"{base_dir}/vae/benign_{run_benign}_synthetic.csv")
+
+    return best_loss
+'''
 
 
-
+feature_weights=calculate_weights(X_train)
 
 y=torch.Tensor(np.ones(X_train.shape[0]))
 X_train=X_train.astype('float64')
@@ -349,21 +439,16 @@ my_dataset = TensorDataset(x, y)
 train_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
 
 
-y=torch.Tensor(np.ones(X_test.shape[0]))
-X_test=X_test.astype('float64')
-x=torch.from_numpy(X_test)
-my_dataset = TensorDataset(x, y)
-test_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
 
 
-y=torch.Tensor(np.ones(mal_np.shape[0]))
+'''y=torch.Tensor(np.ones(mal_np.shape[0]))
 mal_np=mal_np.astype('float64')
 x=torch.from_numpy(mal_np)
 my_dataset = TensorDataset(x, y)
-malicious_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
+malicious_dataloader = DataLoader(my_dataset, batch_size=256)'''  # create your dataloader
 
 print('Train dataset length: {}'.format(len(train_dataloader.dataset)))
-print('Malicious dataset length: {}'.format(len(malicious_dataloader.dataset)))
+#print('Malicious dataset length: {}'.format(len(malicious_dataloader.dataset)))
 
 best_loss=1e6
 
