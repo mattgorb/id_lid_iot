@@ -1,3 +1,3 @@
 datatypes=[
- "class", 'service', 'flag'
+ "class",
 ]
