@@ -260,7 +260,7 @@ def loss_function(out_cont, cat_outs, data, mu, logvar, reduction='sum'):
     print(KLD)
     print(logvar.size())
     print(mu.size())
-    print( (-0.5 * (1 + logvar - mu.pow(2) - logvar.exp())).size())
+    print( (-0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp(), dim=1)).size())
     sys.exit()
     #return recon_loss+KLD, recon_loss.double(), KLD
 
