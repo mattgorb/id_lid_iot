@@ -297,10 +297,7 @@ def test(epoch, best_loss ):
         data = data.to(device)
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
-        print(loss)
-        loss = loss_function2(out_cont, cat_outs, data, reduction='none')
-        print(loss)
-        sys.exit()
+
         losses.extend(loss.cpu().detach().numpy())
         #break
     print('mean benign')
