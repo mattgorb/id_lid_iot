@@ -31,7 +31,8 @@ parser.add_argument('--log-interval', type=int, default=250, metavar='N',
 
 parser.add_argument('--prior', type=str, default='standard', metavar='N',
                     help='prior')
-
+parser.add_argument('--dataset', type=str, default=None, metavar='N',
+                    help='prior')
 args = parser.parse_args()
 
 
@@ -49,7 +50,7 @@ def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
     return int(val)
 
-dataset='nf_bot_iot'
+dataset=args.dataset
 weights=False
 
 embeddings=[]
@@ -136,7 +137,8 @@ elif dataset=='unsw_nb15':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
 
     test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    X_train, X_test = benign_np, benign_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -155,7 +157,8 @@ elif dataset=='kaggle_nid':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
     test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    X_train, X_test = benign_np, benign_np
 
     cont_dim=len(float_cols)
     for col in range(len(categorical_cols)):
@@ -399,6 +402,6 @@ model = VAE(input_dim, embeddings, cat_out, cont_dim)
 model = model.to(device)
 
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
-for epoch in range(50):
+for epoch in range(100):
     train(epoch, )
     best_loss=test( best_loss)
