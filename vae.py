@@ -228,7 +228,7 @@ def train(epoch, ):
     }
     print(f"====> Epoch {epoch}: {info}")
 
-def test(epoch, best_loss ):
+def test(best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
@@ -252,7 +252,7 @@ def test(epoch, best_loss ):
     print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
     precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
     print("AUPR: {}".format(metrics.auc(recall, precision)))
-
+    return None
 
 def test_backup(best_loss ):
     model.eval()
