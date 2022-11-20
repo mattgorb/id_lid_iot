@@ -269,6 +269,7 @@ def train(epoch, ):
     print('====> Epoch: {} Average loss: {:.4f}'.format(
           epoch, train_loss / len(train_dataloader.dataset)))
     print(f"Train loss {train_loss}")
+    print(len(train_dataloader.dataset))
 
 def test(epoch, best_loss ):
     model.eval()
@@ -282,6 +283,8 @@ def test(epoch, best_loss ):
         #break
     print('mean benign')
     print(np.sum(np.array(losses)))
+    print(len(train_dataloader.dataset))
+    print(len(losses))
     sys.exit()
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
