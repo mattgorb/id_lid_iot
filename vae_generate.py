@@ -200,18 +200,18 @@ class VAE(nn.Module):
     def __init__(self,input_dim, embeddings, cats_out, cont_dim):
         super(VAE, self).__init__()
 
-        self.fc1 = nn.Linear(input_dim, 128)
+        self.fc1 = nn.Linear(input_dim, 64)
 
         #self.fc2 = nn.Linear(128, 64)
-        self.enc_mu = torch.nn.Linear(128, 64)
-        self.enc_log_sigma = torch.nn.Linear(128, 64)
+        self.enc_mu = torch.nn.Linear(64, 8)
+        self.enc_log_sigma = torch.nn.Linear(64, 8)
 
-        self.fc3 = nn.Linear(64, 128)
-        self.fc4 = nn.Linear(128, cont_dim)
+        self.fc3 = nn.Linear(8, 64)
+        self.fc4 = nn.Linear(64, cont_dim)
         self.embeddings=torch.nn.ModuleList(embeddings)
         self.cats_out = []
         for cat in cats_out:
-            self.cats_out.append(torch.nn.Linear(128, cat))
+            self.cats_out.append(torch.nn.Linear(64, cat))
         self.cats_out = torch.nn.ModuleList(self.cats_out)
 
     def encode(self, x):
@@ -328,7 +328,7 @@ def test(best_loss ):
         out_cat_list=[]
         for i in range(len(train_dataloader)):
 
-            sample = torch.randn(256, 64).to(device)
+            sample = torch.randn(256, 8).to(device)
             out_cont, cat_outs = model.decode(sample)  # .cpu()
 
 
