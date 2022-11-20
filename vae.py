@@ -355,9 +355,11 @@ def test(best_loss ):
     pairwise_distances=batch_distances(malicious_syn, X_test, weights=feature_weights, batch_size=1000)
     lids_malicious = np.expand_dims(np.array(calculate_lid(pairwise_distances, k_=3)), axis=1)
 
+    print('benign')
     print(lids_benign)
     print(lids_malicious)
-    sys.exit()
+    print(lids_malicious)
+    #sys.exit()
 '''
 def test_backup(best_loss ):
     model.eval()
