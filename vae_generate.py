@@ -36,6 +36,9 @@ parser.add_argument('--prior', type=str, default='standard', metavar='N',
                     help='prior')
 parser.add_argument('--dataset', type=str, default=None, metavar='N',
                     help='prior')
+
+parser.add_argument('--run_benign', type=bool, default=None, metavar='N',
+                    help='prior')
 args = parser.parse_args()
 
 
@@ -43,7 +46,7 @@ args.cuda = not args.no_cuda and torch.cuda.is_available()
 
 torch.manual_seed(args.seed)
 
-device = torch.device("cuda:3" if args.cuda else "cpu")
+device = torch.device("cuda:2" if args.cuda else "cpu")
 print(device)
 kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 
@@ -54,6 +57,8 @@ def compute_embedding_size(n_categories):
     return int(val)
 
 dataset=args.dataset
+run_benign = args.run_benign
+
 weights=False
 
 embeddings=[]
@@ -63,7 +68,7 @@ input_dim=0
 
 base_dir='/s/luffy/b/nobackup/mgorb/iot'
 
-run_benign = True
+
 
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
@@ -314,35 +319,37 @@ def test(best_loss ):
         out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont.cpu().detach().numpy())
 
-    recon_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=1)
-    np.save('')
+    if np.mean(losses)<best_loss:
+        best_loss=np.mean(losses)
+        recon_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=1)
+        np.save(f"{base_dir}/vae/recon_benign_{run_benign}_ds_{dataset}.npy",recon_syn)
 
-    out_cont_list=[]
-    out_cat_list=[]
-    for i in range(len(train_dataloader)):
+        out_cont_list=[]
+        out_cat_list=[]
+        for i in range(len(train_dataloader)):
 
-        sample = torch.randn(256, 64).to(device)
-        out_cont, cat_outs = model.decode(sample)  # .cpu()
-
-
-        loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
-
-        losses.extend(loss.cpu().detach().numpy())
-
-        output=None
-        for cat in cat_outs:
-            pred = cat.argmax(dim=1, keepdim=False)
-
-            if output is None:
-                output=torch.unsqueeze(pred, dim=1)
-            else:
-                output=torch.cat([output,torch.unsqueeze(pred, dim=1)], dim=1  )
-
-        out_cat_list.extend(output.cpu().detach().numpy())
-        out_cont_list.extend(out_cont.cpu().detach().numpy())
+            sample = torch.randn(256, 64).to(device)
+            out_cont, cat_outs = model.decode(sample)  # .cpu()
 
 
+            loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
 
+            losses.extend(loss.cpu().detach().numpy())
+
+            output=None
+            for cat in cat_outs:
+                pred = cat.argmax(dim=1, keepdim=False)
+
+                if output is None:
+                    output=torch.unsqueeze(pred, dim=1)
+                else:
+                    output=torch.cat([output,torch.unsqueeze(pred, dim=1)], dim=1  )
+
+            out_cat_list.extend(output.cpu().detach().numpy())
+            out_cont_list.extend(out_cont.cpu().detach().numpy())
+        np.save(f"{base_dir}/vae/syn_benign_{run_benign}_ds_{dataset}.npy", recon_syn)
+
+    return best_loss
 
     #sys.exit()
 '''
@@ -441,11 +448,6 @@ train_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloa
 
 
 
-'''y=torch.Tensor(np.ones(mal_np.shape[0]))
-mal_np=mal_np.astype('float64')
-x=torch.from_numpy(mal_np)
-my_dataset = TensorDataset(x, y)
-malicious_dataloader = DataLoader(my_dataset, batch_size=256)'''  # create your dataloader
 
 print('Train dataset length: {}'.format(len(train_dataloader.dataset)))
 #print('Malicious dataset length: {}'.format(len(malicious_dataloader.dataset)))
