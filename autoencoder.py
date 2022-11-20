@@ -312,6 +312,8 @@ print('Train dataset length: {}'.format(len(train_dataloader.dataset)))
 print('Test dataset length: {}'.format(len(test_dataloader.dataset)))
 print('Malicious dataset length: {}'.format(len(malicious_dataloader.dataset)))
 
+print(f'train shape:{X_train.shape}')
+
 best_loss=1e6
 
 model = AE(input_dim, embeddings, cat_out, cont_dim)
