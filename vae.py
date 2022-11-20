@@ -230,8 +230,33 @@ def train(epoch, ):
     }
     print(f"====> Epoch {epoch}: {info}")
 
+def test(epoch, best_loss ):
+    model.eval()
+    train_loss = 0
+    losses=[]
+    for batch_idx, (data, _) in enumerate(train_dataloader):
+        data = data.to(device)
 
-def test(best_loss ):
+        out_cont, cat_outs, mu, logvar = model(data)
+        loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
+        losses.extend(loss.cpu().detach().numpy())
+
+    for batch_idx, (data, _) in enumerate(malicious_dataloader):
+        data = data.to(device)
+
+        out_cont, cat_outs, mu, logvar = model(data)
+        loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
+
+        losses.extend(loss.cpu().detach().numpy())
+
+    labels=[0 for i in range(len(train_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
+
+    print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
+    precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
+    print("AUPR: {}".format(metrics.auc(recall, precision)))
+
+
+def test_backup(best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
@@ -276,7 +301,6 @@ def test(best_loss ):
         df.to_csv(f"{base_dir}/vae/benign_{run_benign}.csv")
 
         #randomly sample gaussian for synthetic examples.
-
         for i in range(len(train_dataloader)):
             #data = data.to(device)
             sample = torch.randn(256, 64).to(device)
