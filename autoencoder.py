@@ -265,7 +265,10 @@ def train(epoch, ):
         optimizer.zero_grad()
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data)
-
+        print(loss)
+        loss = loss_function(out_cont, cat_outs, data, reduction='none')
+        print(loss)
+        sys.exit()
         loss.backward()
         train_loss += loss.item()
         #print(train_loss)
