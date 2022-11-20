@@ -58,9 +58,7 @@ def compute_embedding_size(n_categories):
 
 dataset=args.dataset
 run_benign = args.run_benign
-print(run_benign)
-print(args.run_benign)
-sys.exit()
+
 
 weights=False
 
