@@ -308,6 +308,8 @@ def test(best_loss ):
         losses.extend(loss.cpu().detach().numpy())
 
         print(out_cont.size())
+        print(len(cat_outs))
+        print(cat_outs[0].size())
 
         output=None
         for cat in cat_outs:
@@ -334,6 +336,8 @@ def test(best_loss ):
             out_cont, cat_outs = model.decode(sample)  # .cpu()
 
             print(out_cont.size())
+            print(len(cat_outs))
+            print(cat_outs[0].size())
             sys.exit()
 
             loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
