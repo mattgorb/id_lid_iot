@@ -241,28 +241,24 @@ class VAE(nn.Module):
 # Reconstruction + KL divergence losses summed over all elements and batch
 def loss_function(out_cont, cat_outs, data, mu, logvar, reduction='sum'):
     if reduction=='none':
-        loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction='none')
-        loss=torch.sum(loss, dim=1)
+        recon_loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction='none')
+        recon_loss=torch.sum(recon_loss, dim=1)
 
         for cat in range(len(cat_outs)):
             target=data[:,out_cont.size(1)+cat].long()
-            loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
-
+            recon_loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
+        KLD = (-0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp(), dim=1))
     else:
-        loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction=reduction)
+        recon_loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction=reduction)
 
         for cat in range(len(cat_outs)):
             target=data[:,out_cont.size(1)+cat].long()
-            loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
+            recon_loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
 
 
-    KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    print(KLD)
-    print(logvar.size())
-    print(mu.size())
-    print( (-0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp(), dim=1)).size())
-    sys.exit()
-    #return recon_loss+KLD, recon_loss.double(), KLD
+        KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+
+    return (recon_loss+KLD), recon_loss.double(), KLD
 
 
 def train(epoch, ):
