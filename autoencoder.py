@@ -288,7 +288,7 @@ def test(epoch, best_loss ):
 
         losses.extend(loss.cpu().detach().numpy())
         break
-    sys.exit()
+    #sys.exit()
 
     #print(losses[:25])
     #print(losses[len(test_dataloader.dataset):len(test_dataloader.dataset)+25])
