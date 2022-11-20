@@ -307,6 +307,8 @@ def test(best_loss ):
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
 
+        print(out_cont.size())
+        break
         output=None
         for cat in cat_outs:
             pred = cat.argmax(dim=1, keepdim=False)
@@ -331,6 +333,8 @@ def test(best_loss ):
             sample = torch.randn(256, 8).to(device)
             out_cont, cat_outs = model.decode(sample)  # .cpu()
 
+            print(out_cont.size())
+            sys.exit()
 
             loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
 

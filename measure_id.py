@@ -93,7 +93,7 @@ def save_lids(pairwise_distances,k,sample_details, file_name):
         df2=pd.DataFrame(result, columns=['value']+idxs)
         df=pd.read_csv('results2/id/'+file_name+str(k)+'.csv')
         df=df.append(df2)
-    df.to_csv('results2/id/'+file_name+str(k)+'.csv', index=False)
+    df.to_csv('results/id/'+file_name+str(k)+'.csv', index=False)
 
 
 batch_size=1000
