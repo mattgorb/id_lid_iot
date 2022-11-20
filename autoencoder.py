@@ -160,10 +160,6 @@ elif dataset=='kaggle_nid':
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
-    print(float_cols)
-    print(categorical_cols)
-    sys.exit()
-
     test_split=int(benign_np.shape[0]*.8)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
 
@@ -231,7 +227,13 @@ class AE(nn.Module):
 def loss_function(out_cont, cat_outs, data, reduction='sum'):
     loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
     if reduction=='none':
+        print(loss)
         loss=torch.sum(loss, dim=1)
+
+        for cat in range(len(cat_outs)):
+            target=data[:,out_cont.size(1)+cat].long()
+            print(F.cross_entropy(cat_outs[cat], target, reduction=reduction))
+            loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
 
     for cat in range(len(cat_outs)):
         target=data[:,out_cont.size(1)+cat].long()
@@ -274,6 +276,7 @@ def test(epoch, best_loss ):
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
+        break
     print('mean benign')
     print(np.mean(np.array(losses)))
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
@@ -283,6 +286,8 @@ def test(epoch, best_loss ):
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
 
         losses.extend(loss.cpu().detach().numpy())
+        break
+    sys.exit()
 
     #print(losses[:25])
     #print(losses[len(test_dataloader.dataset):len(test_dataloader.dataset)+25])
