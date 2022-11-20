@@ -291,15 +291,15 @@ def test(epoch, best_loss ):
 
         losses.extend(loss.cpu().detach().numpy())
         break
-    sys.exit()
+    #sys.exit()
 
     #print(losses[:25])
     #print(losses[len(test_dataloader.dataset):len(test_dataloader.dataset)+25])
-    labels=[0 for i in range(len(test_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
+    '''labels=[0 for i in range(len(test_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
 
     print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
     precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
-    print("AUPR: {}".format(metrics.auc(recall, precision)))
+    print("AUPR: {}".format(metrics.auc(recall, precision)))'''
 
 
 y=torch.Tensor(np.ones(X_train.shape[0]))
