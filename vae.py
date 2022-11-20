@@ -16,6 +16,9 @@ from data_setup import df_to_np, calculate_weights
 from util.knn import calculate_knn
 from sklearn import metrics
 
+from pairwise_distances import *
+from data_setup import df_to_np, calculate_weights
+from util.lid import calculate_lid, calculate_exactmatch
 
 parser = argparse.ArgumentParser(description='VAE MNIST Example')
 parser.add_argument('--batch-size', type=int, default=128, metavar='N',
@@ -76,6 +79,7 @@ if dataset=='ton_iot':
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
+
 
 
     for col in range(len(categorical_cols)):
@@ -308,12 +312,10 @@ def test(best_loss ):
         out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont.cpu().detach().numpy())
 
-    print(np.array(out_cat_list).shape)
-    print(np.array(out_cont_list).shape)
     benign_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=1)
-    print(benign_syn.shape)
-    sys.exit()
 
+    out_cont_list=[]
+    out_cat_list=[]
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
 
@@ -321,6 +323,23 @@ def test(best_loss ):
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
 
         losses.extend(loss.cpu().detach().numpy())
+
+        output=None
+        for cat in cat_outs:
+            pred = cat.argmax(dim=1, keepdim=False)
+
+            if output is None:
+                output=torch.unsqueeze(pred, dim=1)
+            else:
+                output=torch.cat([output,torch.unsqueeze(pred, dim=1)], dim=1  )
+
+        out_cat_list.extend(output.cpu().detach().numpy())
+        out_cont_list.extend(out_cont.cpu().detach().numpy())
+
+
+    malicious_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=1)
+
+
 
     labels=[0 for i in range(len(test_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
 
@@ -330,6 +349,16 @@ def test(best_loss ):
 
 
 
+    pairwise_distances=batch_distances(benign_syn, X_test, weights=feature_weights, batch_size=1000)
+    lids_benign = np.expand_dims(np.array(calculate_lid(pairwise_distances, k_=3)), axis=1)
+
+    pairwise_distances=batch_distances(malicious_syn, X_test, weights=feature_weights, batch_size=1000)
+    lids_malicious = np.expand_dims(np.array(calculate_lid(pairwise_distances, k_=3)), axis=1)
+
+    print(lids_benign)
+    print(lids_malicious)
+    sys.exit()
+'''
 def test_backup(best_loss ):
     model.eval()
     train_loss = 0
@@ -411,7 +440,10 @@ def test_backup(best_loss ):
         df.to_csv(f"{base_dir}/vae/benign_{run_benign}_synthetic.csv")
 
     return best_loss
+'''
 
+
+feature_weights=calculate_weights(X_train)
 
 y=torch.Tensor(np.ones(X_train.shape[0]))
 X_train=X_train.astype('float64')
