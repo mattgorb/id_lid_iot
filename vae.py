@@ -263,6 +263,11 @@ def train(epoch, ):
         out_cont, cat_outs , mu, logvar= model(data)
         loss, recon, kld = loss_function(out_cont, cat_outs, data, mu, logvar)
 
+        print(out_cont.size())
+
+        print(len(cat_outs))
+        print(data.size())
+        sys.exit()
         loss.backward()
 
         train_loss += loss.item()
