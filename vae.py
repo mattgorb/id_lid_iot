@@ -49,7 +49,7 @@ def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
     return int(val)
 
-dataset='ton_iot'
+dataset='nf_bot_iot'
 weights=False
 
 embeddings=[]
