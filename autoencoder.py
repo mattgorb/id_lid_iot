@@ -227,6 +227,7 @@ class AE(nn.Module):
 def loss_function(out_cont, cat_outs, data, reduction='sum'):
     loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
     if reduction=='none':
+        print("HERe")
         print(loss)
         loss=torch.sum(loss, dim=1)
 
