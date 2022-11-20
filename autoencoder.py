@@ -248,7 +248,6 @@ def loss_function(out_cont, cat_outs, data, reduction='sum'):
 
     else:
         loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction=reduction)
-        loss=torch.sum(loss, dim=1)
 
         for cat in range(len(cat_outs)):
             target=data[:,out_cont.size(1)+cat].long()
