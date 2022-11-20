@@ -310,7 +310,7 @@ def test(best_loss ):
 
     print(np.array(out_cat_list).shape)
     print(np.array(out_cont_list).shape)
-    benign_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=0)
+    benign_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=1)
     print(benign_syn)
     sys.exit()
 
