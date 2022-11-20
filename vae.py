@@ -357,8 +357,9 @@ def test(best_loss ):
 
     print('benign')
     print(lids_benign)
+    print('malicious')
     print(lids_malicious)
-    print(lids_malicious)
+
     #sys.exit()
 '''
 def test_backup(best_loss ):
