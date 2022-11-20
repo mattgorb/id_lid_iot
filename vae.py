@@ -64,11 +64,16 @@ if dataset=='ton_iot':
     benign_np, preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
     mal_np=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
 
-    run_benign=True
+    '''run_benign=True
     if run_benign:
         X_train, X_test =benign_np, benign_np
     else:
-        X_train, X_test = mal_np, mal_np
+        X_train, X_test = mal_np, mal_np'''
+
+    test_split=int(benign_np.shape[0]*.8)
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
+
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
 
@@ -92,10 +97,12 @@ elif dataset=='iot23':
 
     mal_np = df_to_np( f'{base_dir}/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=False)
 
-    X_train, X_test = benign_np, benign_np
+    test_split=int(benign_np.shape[0]*.8)
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
+
     feature_weights = calculate_weights(X_train)
 
-    X_train, X_test = benign_np, benign_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -114,7 +121,10 @@ elif dataset=='nf_bot_iot':
     from data_preprocess.drop_columns import nf_bot_iot
     benign_np , preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np(f'{base_dir}/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
-    X_train, X_test =benign_np, benign_np
+
+    test_split=int(benign_np.shape[0]*.8)
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -137,8 +147,8 @@ elif dataset=='unsw_nb15':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
 
     test_split=int(benign_np.shape[0]*.8)
-    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    X_train, X_test = benign_np, benign_np
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
 
     X_train = X_train.astype('float64')
     cont_dim=len(float_cols)
@@ -157,8 +167,8 @@ elif dataset=='kaggle_nid':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
     test_split=int(benign_np.shape[0]*.8)
-    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    X_train, X_test = benign_np, benign_np
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
 
     cont_dim=len(float_cols)
     for col in range(len(categorical_cols)):

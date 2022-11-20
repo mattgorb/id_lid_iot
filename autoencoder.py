@@ -50,7 +50,7 @@ kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 
 def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
-    return 2#int(val)
+    return int(val)
 
 #dataset is an input arg now
 dataset=args.dataset
@@ -72,8 +72,8 @@ if dataset=='ton_iot':
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
 
     test_split=int(benign_np.shape[0]*.8)
-    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    X_train, X_test = benign_np, benign_np
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
 
 
     X_train = X_train.astype('float64')
@@ -100,8 +100,8 @@ elif dataset=='iot23':
     feature_weights = calculate_weights(X_train)
 
     test_split=int(benign_np.shape[0]*.8)
-    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    X_train, X_test = benign_np, benign_np
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
 
 
     X_train = X_train.astype('float64')
@@ -123,8 +123,8 @@ elif dataset=='nf_bot_iot':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
 
     test_split=int(benign_np.shape[0]*.8)
-    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    X_train, X_test = benign_np, benign_np
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
 
 
     X_train = X_train.astype('float64')
@@ -148,8 +148,8 @@ elif dataset=='unsw_nb15':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
 
     test_split=int(benign_np.shape[0]*.8)
-    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    X_train, X_test = benign_np, benign_np
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
 
 
     X_train = X_train.astype('float64')
@@ -172,8 +172,8 @@ elif dataset=='kaggle_nid':
     print(float_cols)
     print(categorical_cols)
     test_split=int(benign_np.shape[0]*.8)
-    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    X_train, X_test = benign_np, benign_np
+    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #X_train, X_test = benign_np, benign_np
 
     cont_dim=len(float_cols)
     for col in range(len(categorical_cols)):

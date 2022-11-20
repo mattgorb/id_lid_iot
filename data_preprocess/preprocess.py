@@ -57,9 +57,6 @@ class Preprocess():
         else:
             temp_df=self.df
 
-        print(self.df.shape)
-        print(temp_df.shape)
-        sys.exit()
 
         for col in self.df.columns:
             type_=preprocess_type(col)
