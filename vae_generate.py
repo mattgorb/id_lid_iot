@@ -37,7 +37,7 @@ parser.add_argument('--prior', type=str, default='standard', metavar='N',
 parser.add_argument('--dataset', type=str, default=None, metavar='N',
                     help='prior')
 
-parser.add_argument('--run_benign', type=bool, default=None, metavar='N',
+parser.add_argument('--run_benign', type=bool, default=False, metavar='N',
                     help='prior')
 args = parser.parse_args()
 
