@@ -239,14 +239,8 @@ class AE(nn.Module):
 def loss_function(out_cont, cat_outs, data, reduction='sum'):
     loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
     if reduction=='none':
-        #print("HERe")
-        #print(loss[:10])
-        loss=torch.sum(loss, dim=1)
 
-        '''for cat in range(len(cat_outs)):
-            target=data[:,out_cont.size(1)+cat].long()
-            print(F.cross_entropy(cat_outs[cat], target, reduction=reduction)[:10])
-            loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)'''
+        loss=torch.sum(loss, dim=1)
 
     for cat in range(len(cat_outs)):
         target=data[:,out_cont.size(1)+cat].long()
@@ -269,29 +263,26 @@ def train(epoch, ):
         train_loss += loss.item()
         #print(train_loss)
         optimizer.step()
-        '''if batch_idx % args.log_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_dataloader.dataset),
-                100. * batch_idx / len(train_dataloader),
-                loss.item() / len(data)))'''
+
 
 
     print('====> Epoch: {} Average loss: {:.4f}'.format(
           epoch, train_loss / len(train_dataloader.dataset)))
-
+    print(f"Train loss {train_loss}")
 
 def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
-    for batch_idx, (data, _) in enumerate(test_dataloader):
+    for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
         #break
     print('mean benign')
-    print(np.mean(np.array(losses)))
+    print(np.sum(np.array(losses)))
+    sys.exit()
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
 
