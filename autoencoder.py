@@ -279,6 +279,8 @@ def test(epoch, best_loss ):
 
         losses.extend(loss.cpu().detach().numpy())
 
+    print(losses[:25])
+    print(losses[len(test_dataloader.dataset):len(test_dataloader.dataset)+25])
     labels=[0 for i in range(len(test_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
 
     print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
