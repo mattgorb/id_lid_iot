@@ -237,14 +237,22 @@ class AE(nn.Module):
 
 # Reconstruction + KL divergence losses summed over all elements and batch
 def loss_function(out_cont, cat_outs, data, reduction='sum'):
-    loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
-    if reduction=='none':
 
+    if reduction=='none':
+        loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction='none')
         loss=torch.sum(loss, dim=1)
 
-    for cat in range(len(cat_outs)):
-        target=data[:,out_cont.size(1)+cat].long()
-        loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
+        for cat in range(len(cat_outs)):
+            target=data[:,out_cont.size(1)+cat].long()
+            loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
+
+    else:
+        loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction=reduction)
+        loss=torch.sum(loss, dim=1)
+
+        for cat in range(len(cat_outs)):
+            target=data[:,out_cont.size(1)+cat].long()
+            loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
 
     return loss.double()
 
