@@ -308,7 +308,7 @@ def test(best_loss ):
         losses.extend(loss.cpu().detach().numpy())
 
         print(out_cont.size())
-        break
+
         output=None
         for cat in cat_outs:
             pred = cat.argmax(dim=1, keepdim=False)
@@ -320,7 +320,7 @@ def test(best_loss ):
 
         out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont.cpu().detach().numpy())
-
+        break
     if np.mean(losses)<best_loss:
         best_loss=np.mean(losses)
         recon_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=1)
