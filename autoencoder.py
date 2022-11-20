@@ -237,6 +237,18 @@ class AE(nn.Module):
 
 # Reconstruction + KL divergence losses summed over all elements and batch
 def loss_function(out_cont, cat_outs, data, reduction='sum'):
+    loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
+    if reduction=='none':
+
+        loss=torch.sum(loss, dim=1)
+
+    for cat in range(len(cat_outs)):
+        target=data[:,out_cont.size(1)+cat].long()
+        loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
+
+    return loss.double()
+
+def loss_function2(out_cont, cat_outs, data, reduction='sum'):
 
     if reduction=='none':
         loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction='none')
@@ -255,7 +267,6 @@ def loss_function(out_cont, cat_outs, data, reduction='sum'):
 
     return loss.double()
 
-
 def train(epoch, ):
     model.train()
     train_loss = 0
@@ -265,11 +276,7 @@ def train(epoch, ):
         optimizer.zero_grad()
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data)
-        print(loss)
-        loss = loss_function(out_cont, cat_outs, data, reduction='none')
-        print(loss)
-        print(torch.sum(loss))
-        sys.exit()
+
         loss.backward()
         train_loss += loss.item()
         #print(train_loss)
@@ -286,10 +293,14 @@ def test(epoch, best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
-    for batch_idx, (data, _) in enumerate(train_dataloader):
+    for batch_idx, (data, _) in enumerate(test_dataloader):
         data = data.to(device)
         out_cont, cat_outs = model(data)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
+        print(loss)
+        loss = loss_function2(out_cont, cat_outs, data, reduction='none')
+        print(loss)
+        sys.exit()
         losses.extend(loss.cpu().detach().numpy())
         #break
     print('mean benign')
