@@ -263,12 +263,6 @@ def train(epoch, ):
         out_cont, cat_outs , mu, logvar= model(data)
         loss, recon, kld = loss_function(out_cont, cat_outs, data, mu, logvar)
 
-        print(out_cont.size())
-
-        print(len(cat_outs))
-        print(data.size())
-        print(data)
-        sys.exit()
         loss.backward()
 
         train_loss += loss.item()
@@ -290,12 +284,31 @@ def test(best_loss ):
     model.eval()
     train_loss = 0
     losses=[]
+
+
+    out_cont_list=[]
+    out_cat_list=[]
+
     for batch_idx, (data, _) in enumerate(train_dataloader):
         data = data.to(device)
 
         out_cont, cat_outs, mu, logvar = model(data)
         loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
         losses.extend(loss.cpu().detach().numpy())
+
+        output=None
+        for cat in cat_outs:
+            pred = cat.argmax(dim=1, keepdim=False)
+
+            if output is None:
+                output=torch.unsqueeze(pred, dim=1)
+            else:
+                output=torch.cat([output,torch.unsqueeze(pred, dim=1)], dim=1  )
+
+        out_cat_list.extend(output.cpu().detach().numpy())
+        out_cont_list.extend(out_cont.cpu().detach().numpy())
+
+
 
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
@@ -310,7 +323,8 @@ def test(best_loss ):
     print("AUC: {}".format(metrics.roc_auc_score(labels, losses)))
     precision, recall, thresholds = metrics.precision_recall_curve(labels, losses)
     print("AUPR: {}".format(metrics.auc(recall, precision)))
-    return None
+
+
 
 def test_backup(best_loss ):
     model.eval()
