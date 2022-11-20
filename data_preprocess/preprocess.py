@@ -57,6 +57,10 @@ class Preprocess():
         else:
             temp_df=self.df
 
+        print(self.df.shape)
+        print(temp_df.shape)
+        sys.exit()
+
         for col in self.df.columns:
             type_=preprocess_type(col)
             if type_=='default':
@@ -65,8 +69,7 @@ class Preprocess():
                 self.encoders[col]['type']=None
                 self.encoders[col]['encoder']=None
             elif type_=='categorical':
-                #print(temp_df[col].values.dtype)
-                #print("Processing {} as category".format(col))
+
                 enc = LabelEncoder()
                 enc.fit(temp_df[col].astype(str).values)
                 le_dict = dict(zip(enc.classes_, enc.transform(enc.classes_)))
@@ -94,5 +97,4 @@ class Preprocess():
                 self.encoders[col]['type']='continuous'
                 self.encoders[col]['encoder']=enc
 
-        #sys.exit()
         self.df_filter()
