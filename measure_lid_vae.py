@@ -26,9 +26,11 @@ if dataset=='ton_iot':
     benign_np=df_to_np(directory+'/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)
 
 
-    mal_np=df_to_np(directory+'/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False)
-    #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
-    X_train, X_test =benign_np, benign_np
+    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+
+    X_train, X_test =benign_np, benign_gen
+
     feature_weights=calculate_weights(X_train)
 
 
@@ -39,9 +41,10 @@ elif dataset=='iot23':
 
     benign_np=df_to_np(directory+'iot23/iot23_sample_with_real.csv',iot23.datatypes,  train_set=True)
 
-    mal_np=df_to_np(directory+'iot23/iot23_sample_with_real.csv', iot23.datatypes,train_set=False)
-    #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
-    X_train, X_test =benign_np, benign_np
+    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+
+    X_train, X_test =benign_np, benign_gen
     feature_weights=calculate_weights(X_train)
 
 
@@ -50,8 +53,10 @@ elif dataset=='iot23':
 elif dataset=='nf_bot_iot':
     from data_preprocess.drop_columns import nf_bot_iot
     benign_np =df_to_np(directory+'nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True)
-    mal_np=df_to_np(directory+'nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
-    X_train, X_test =benign_np, benign_np
+    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+
+    X_train, X_test =benign_np, benign_gen
 
     feature_weights=calculate_weights(X_train)
 
@@ -61,10 +66,11 @@ elif dataset=='nf_bot_iot':
 elif dataset=='unsw_nb15':
     from data_preprocess.drop_columns import unsw_n15
     benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
-    benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
+    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
 
-    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv',  unsw_n15.datatypes,train_set=False)
-    X_train, X_test =benign_np, benign_np_test
+    X_train, X_test =benign_np, benign_gen
+
 
     feature_weights=calculate_weights(X_train)
 
