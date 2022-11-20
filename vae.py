@@ -267,6 +267,7 @@ def train(epoch, ):
 
         print(len(cat_outs))
         print(data.size())
+        print(data)
         sys.exit()
         loss.backward()
 
