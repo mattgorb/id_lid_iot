@@ -50,7 +50,7 @@ kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 
 def compute_embedding_size(n_categories):
     val = min(600, round(1.6 * n_categories**0.56))
-    return int(val)
+    return 2#int(val)
 
 #dataset is an input arg now
 dataset=args.dataset
@@ -230,14 +230,14 @@ class AE(nn.Module):
 def loss_function(out_cont, cat_outs, data, reduction='sum'):
     loss=F.mse_loss(out_cont.double(), data[:,:out_cont.size(1)].double(), reduction=reduction)
     if reduction=='none':
-        print("HERe")
-        print(loss[:10])
+        #print("HERe")
+        #print(loss[:10])
         loss=torch.sum(loss, dim=1)
 
-        for cat in range(len(cat_outs)):
+        '''for cat in range(len(cat_outs)):
             target=data[:,out_cont.size(1)+cat].long()
             print(F.cross_entropy(cat_outs[cat], target, reduction=reduction)[:10])
-            loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)
+            loss += F.cross_entropy(cat_outs[cat], target, reduction=reduction)'''
 
     for cat in range(len(cat_outs)):
         target=data[:,out_cont.size(1)+cat].long()
