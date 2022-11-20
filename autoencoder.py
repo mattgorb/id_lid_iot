@@ -268,6 +268,7 @@ def train(epoch, ):
         print(loss)
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
         print(loss)
+        print(torch.sum(loss))
         sys.exit()
         loss.backward()
         train_loss += loss.item()
