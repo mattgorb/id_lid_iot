@@ -20,7 +20,7 @@ from pairwise_distances import *
 from data_setup import df_to_np, calculate_weights
 from util.lid import calculate_lid, calculate_exactmatch
 
-parser = argparse.ArgumentParser(description='VAE MNIST Example')
+parser = argparse.ArgumentParser(description='VAE')
 parser.add_argument('--batch-size', type=int, default=128, metavar='N',
                     help='input batch size for training (default: 128)')
 parser.add_argument('--epochs', type=int, default=250, metavar='N',
@@ -322,6 +322,7 @@ def test(best_loss ):
         out_cont_list.extend(out_cont.cpu().detach().numpy())
 
     if np.mean(losses)<best_loss:
+        print("Generating new synthetic examples...")
         best_loss=np.mean(losses)
         recon_syn=np.concatenate([np.array(out_cont_list),np.array(out_cat_list)],axis=1)
         np.save(f"{base_dir}/vae/recon_benign_{run_benign}_ds_{dataset}.npy",recon_syn)
