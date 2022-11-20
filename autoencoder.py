@@ -160,6 +160,10 @@ elif dataset=='kaggle_nid':
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
+    print(float_cols)
+    print(categorical_cols)
+    sys.exit()
+
     test_split=int(benign_np.shape[0]*.8)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
 
