@@ -336,7 +336,7 @@ def test(best_loss ):
         recon_loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction='none')
 
 
-        out_cont_final = torch.where(recon_loss < 0.0025, data[:, :out_cont.size(1)].double(), out_cont.double())
+        out_cont_final = torch.where(recon_loss < 0.025, data[:, :out_cont.size(1)].double(), out_cont.double())
 
 
         out_cat_list.extend(output.cpu().detach().numpy())
@@ -381,7 +381,9 @@ def test(best_loss ):
 
             out_cat_list.extend(output.cpu().detach().numpy())
             out_cont_list.extend(out_cont_new.cpu().detach().numpy())
-        np.save(f"{base_dir}/vae/syn_benign_{run_benign}_ds_{dataset}.npy", recon_syn)
+
+        syn = np.concatenate([np.array(out_cont_list), np.array(out_cat_list)], axis=1)
+        np.save(f"{base_dir}/vae/syn_benign_{run_benign}_ds_{dataset}.npy", syn)
         #print(out_cont[0, :].double())
     return best_loss
 

@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-k=20
-in_dist_lids=list(np.loadtxt('results/kaggle_nid_benign_lids_recon_'+str(k)+'.txt'))
-ood_lids=    list(np.loadtxt('results/kaggle_nid_mal_lids_recon_'+str(k)+'.txt'))
+k=3
+in_dist_lids=list(np.loadtxt('results/kaggle_nid_benign_lids_syn_'+str(k)+'.txt'))
+ood_lids=    list(np.loadtxt('results/kaggle_nid_mal_lids_syn_'+str(k)+'.txt'))
 
 #in_dist_lids=pd.read_csv('results/unsw_nb15_benign_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=pd.read_csv('results/unsw_nb15_mal_lids_expanded_'+str(k)+'.csv')['value'].values
