@@ -299,12 +299,12 @@ def test(epoch, best_loss ):
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
 
         losses.extend(loss.cpu().detach().numpy())
-        #break
-    print('mean benign')
-    print(np.sum(np.array(losses)))
-    print(len(train_dataloader.dataset))
-    print(len(losses))
-    sys.exit()
+        break
+    num_fts = x.size(1) - len(cat_outs)
+    print(data[0,:num_fts].float())
+    print(out_cont[0,:])
+    return
+
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
 
@@ -312,8 +312,7 @@ def test(epoch, best_loss ):
         loss = loss_function(out_cont, cat_outs, data, reduction='none')
 
         losses.extend(loss.cpu().detach().numpy())
-        #break
-    #sys.exit()
+
     print('mean malicious')
     print(np.mean(np.array(losses[len(test_dataloader.dataset):])))
 
