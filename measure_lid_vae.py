@@ -31,6 +31,11 @@ if dataset=='ton_iot':
 
     X_train, X_test =benign_np, benign_gen
 
+
+    print(X_train[0])
+    print(X_test[0])
+    sys.exit()
+
     feature_weights=calculate_weights(X_train)
 
 
@@ -55,6 +60,8 @@ elif dataset=='nf_bot_iot':
     benign_np =df_to_np(directory+'nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True)
     benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
     mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+
+
 
     X_train, X_test =benign_np, benign_gen
 
