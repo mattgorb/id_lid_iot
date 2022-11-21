@@ -336,7 +336,7 @@ y=torch.Tensor(np.ones(X_test.shape[0]))
 X_test=X_test.astype('float64')
 x=torch.from_numpy(X_test)
 my_dataset = TensorDataset(x, y)
-test_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
+test_dataloader = DataLoader(my_dataset, batch_size=256, shuffle=True)  # create your dataloader
 
 y=torch.Tensor(np.ones(mal_np.shape[0]))
 mal_np=mal_np.astype('float64')
