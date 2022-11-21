@@ -338,7 +338,7 @@ def test(best_loss ):
 
         out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont_final.cpu().detach().numpy())
-
+    print("HERE")
     print( data[0, :out_cont.size(1)].double())
     print(out_cont[0,:].double())
     if np.mean(losses)<best_loss:
