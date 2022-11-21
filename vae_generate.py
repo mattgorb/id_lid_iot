@@ -357,8 +357,8 @@ def test(best_loss ):
 
             print(da[0,:].size())
             print(out_cont.size())
-            print(train_dataloader.dataset.size())
-            #print(torch.cdist(da[:,:],train_dataloader.dataset[:,:num_fts]))
+            print(train_dataloader.dataset[:][0].size())
+            print(torch.cdist(da[:,:],train_dataloader.dataset[:][0]))
             sys.exit()
             output=None
             for cat in cat_outs:
@@ -469,8 +469,7 @@ x=torch.from_numpy(X_train)
 my_dataset = TensorDataset(x, y)
 train_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
 
-print(train_dataloader.dataset[:][0].size())
-sys.exit()
+
 
 
 
