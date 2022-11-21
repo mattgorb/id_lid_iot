@@ -330,6 +330,11 @@ def test(best_loss ):
             else:
                 output=torch.cat([output,torch.unsqueeze(pred, dim=1)], dim=1  )
 
+        recon_loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction='none')
+        print(recon_loss)
+
+        sys.exit()
+
         out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont.cpu().detach().numpy())
 

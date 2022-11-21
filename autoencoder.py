@@ -301,9 +301,7 @@ def test(epoch, best_loss ):
         losses.extend(loss.cpu().detach().numpy())
         break
     num_fts = x.size(1) - len(cat_outs)
-    print(data[0,:num_fts].float())
-    print(out_cont[0,:])
-    return
+
 
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
