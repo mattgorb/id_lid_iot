@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 
 in_dist_lids=list(np.loadtxt(f'results/{args.dataset}_benign_{args.algorithm}_{args.syn_type}_'+str(args.k)+'.txt'))
-ood_lids=    list(np.loadtxt(f'results/kaggle_nid_mal_{args.algorithm}_{args.syn_type}_'+str(args.k)+'.txt'))
+ood_lids=    list(np.loadtxt(f'results/{args.dataset}_mal_{args.algorithm}_{args.syn_type}_'+str(args.k)+'.txt'))
 
 #in_dist_lids=pd.read_csv('results/unsw_nb15_benign_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=pd.read_csv('results/unsw_nb15_mal_lids_expanded_'+str(k)+'.csv')['value'].values
