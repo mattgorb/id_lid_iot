@@ -3,9 +3,18 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-k=3
-in_dist_lids=list(np.loadtxt('results/kaggle_nid_benign_lids_syn_'+str(k)+'.txt'))
-ood_lids=    list(np.loadtxt('results/kaggle_nid_mal_lids_syn_'+str(k)+'.txt'))
+import argparse
+
+parser = argparse.ArgumentParser(description='VAE')
+parser.add_argument('--dataset', type=str, default=None,)
+parser.add_argument('--k', type=int, default=0, )
+parser.add_argument('--syn_type', type=str, default=None, )
+args = parser.parse_args()
+
+
+
+in_dist_lids=list(np.loadtxt(f'results/{args.dataset}_benign_lids_{args.syn}_'+str(args.k)+'.txt'))
+ood_lids=    list(np.loadtxt(f'results/kaggle_nid_mal_lids_syn_'+str(args.k)+'.txt'))
 
 #in_dist_lids=pd.read_csv('results/unsw_nb15_benign_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=pd.read_csv('results/unsw_nb15_mal_lids_expanded_'+str(k)+'.csv')['value'].values
