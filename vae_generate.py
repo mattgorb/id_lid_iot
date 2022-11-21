@@ -346,19 +346,24 @@ def test(best_loss ):
 
         out_cont_list=[]
         out_cat_list=[]
+
+        num_fts = data.size(1) - len(cat_outs)
+        trainset_cont = train_dataloader.dataset[:][0][:, :num_fts].cuda()
         for batch_idx, (data, _) in enumerate(train_dataloader):
             data = data.to(device)
 
             sample = torch.randn(256, 8).to(device)
             out_cont, cat_outs = model.decode(sample)  # .cpu()
 
-            num_fts = data.size(1) - len(cat_outs)
+
             da = data[:, :num_fts].float()
 
             print(da[0,:].size())
             print(out_cont.size())
             print(train_dataloader.dataset[:][0][:,:num_fts].size())
-            print(torch.cdist(da[:,:],train_dataloader.dataset[:][0][:,:num_fts].cuda()))
+
+            a = trainset_cont[torch.randperm(trainset_cont.size()[0])][:5000]
+            print(torch.cdist(da[:,:],a))
             sys.exit()
             output=None
             for cat in cat_outs:
