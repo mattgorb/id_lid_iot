@@ -180,14 +180,14 @@ elif dataset=='kaggle_nid':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
 
-    print(run_benign)
+
     if run_benign:
-        print("HERE")
+
         X_train, X_test =benign_np, benign_np
     else:
         X_train, X_test = mal_np, mal_np
 
-    sys.exit()
+
     cont_dim=len(float_cols)
     for col in range(len(categorical_cols)):
         n_cats = preprocess.encoders[categorical_cols[col]]['n_classes']#len(preprocess.encoders[categorical_cols[col]]['encoder'].classes_)

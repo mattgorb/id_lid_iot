@@ -28,15 +28,12 @@ if dataset=='ton_iot':
     benign_np=df_to_np(directory+'/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)
 
 
-    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
-    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+    #args.syn_type=syn or recon
+    benign_gen=np.load(f"{directory}/vae/{args.syn_type}_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/{args.syn_type}_benign_False_ds_{dataset}.npy")
 
     X_train, X_test =benign_np, benign_gen
-    x=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-    print(x[0])
-    print(X_train[0])
-    print(X_test[0])
-    sys.exit()
+
 
     feature_weights=calculate_weights(X_train)
 
@@ -48,8 +45,9 @@ elif dataset=='iot23':
 
     benign_np=df_to_np(directory+'iot23/iot23_sample_with_real.csv',iot23.datatypes,  train_set=True)
 
-    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
-    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+    #args.syn_type=syn or recon
+    benign_gen=np.load(f"{directory}/vae/{args.syn_type}_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/{args.syn_type}_benign_False_ds_{dataset}.npy")
 
     X_train, X_test =benign_np, benign_gen
     feature_weights=calculate_weights(X_train)
@@ -60,8 +58,9 @@ elif dataset=='iot23':
 elif dataset=='nf_bot_iot':
     from data_preprocess.drop_columns import nf_bot_iot
     benign_np =df_to_np(directory+'nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True)
-    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
-    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+    #args.syn_type=syn or recon
+    benign_gen=np.load(f"{directory}/vae/{args.syn_type}_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/{args.syn_type}_benign_False_ds_{dataset}.npy")
 
 
 
@@ -75,8 +74,9 @@ elif dataset=='nf_bot_iot':
 elif dataset=='unsw_nb15':
     from data_preprocess.drop_columns import unsw_n15
     benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
-    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
-    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+    #args.syn_type=syn or recon
+    benign_gen=np.load(f"{directory}/vae/{args.syn_type}_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/{args.syn_type}_benign_False_ds_{dataset}.npy")
 
     X_train, X_test =benign_np, benign_gen
 
