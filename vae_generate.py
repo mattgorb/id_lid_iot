@@ -39,6 +39,8 @@ parser.add_argument('--dataset', type=str, default=None, metavar='N',
 
 parser.add_argument('--run_benign', type=bool, default=False, metavar='N',
                     help='prior')
+parser.add_argument('--gpu', type=str, default=None, metavar='N',
+                    help='prior')
 args = parser.parse_args()
 
 
@@ -46,7 +48,7 @@ args.cuda = not args.no_cuda and torch.cuda.is_available()
 
 torch.manual_seed(args.seed)
 
-device = torch.device("cuda:5" if args.cuda else "cpu")
+device = torch.device(f"cuda:{args.gpu}" if args.cuda else "cpu")
 print(device)
 kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 
