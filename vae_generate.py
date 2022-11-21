@@ -195,7 +195,6 @@ elif dataset=='kaggle_nid':
         cat_out.append(n_cats)
 
     input_dim+=cont_dim
-sys.exit()
 
 
 
@@ -347,10 +346,18 @@ def test(best_loss ):
 
         out_cont_list=[]
         out_cat_list=[]
-        for i in range(len(train_dataloader)):
+        for batch_idx, (data, _) in enumerate(train_dataloader):
+            data = data.to(device)
 
             sample = torch.randn(256, 8).to(device)
             out_cont, cat_outs = model.decode(sample)  # .cpu()
+
+            num_fts = data.size(1) - len(cat_outs)
+            da = data[:, :num_fts].float()
+
+            print(da[0,:])
+            print(out_cont)
+            sys.exit()
             output=None
             for cat in cat_outs:
                 pred = cat.argmax(dim=1, keepdim=False)
