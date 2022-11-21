@@ -338,9 +338,7 @@ def test(best_loss ):
 
         out_cat_list.extend(output.cpu().detach().numpy())
         out_cont_list.extend(out_cont_final.cpu().detach().numpy())
-    print("HERE")
-    print( data[0, :out_cont.size(1)].double())
-    print(out_cont[0,:].double())
+
     if np.mean(losses)<best_loss:
         print("Generating new synthetic examples...")
         best_loss=np.mean(losses)
@@ -365,7 +363,7 @@ def test(best_loss ):
             out_cat_list.extend(output.cpu().detach().numpy())
             out_cont_list.extend(out_cont.cpu().detach().numpy())
         np.save(f"{base_dir}/vae/syn_benign_{run_benign}_ds_{dataset}.npy", recon_syn)
-        print(out_cont[0, :].double())
+        #print(out_cont[0, :].double())
     return best_loss
 
     #sys.exit()
