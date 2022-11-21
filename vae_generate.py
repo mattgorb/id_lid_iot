@@ -355,8 +355,10 @@ def test(best_loss ):
             num_fts = data.size(1) - len(cat_outs)
             da = data[:, :num_fts].float()
 
-            print(da[0,:])
-            print(out_cont)
+            print(da[0,:].size())
+            print(out_cont.size())
+            print(train_dataloader.dataset[:,:num_fts].size())
+            print(torch.cdist(da[0,:],train_dataloader.dataset[:,:num_fts]))
             sys.exit()
             output=None
             for cat in cat_outs:
