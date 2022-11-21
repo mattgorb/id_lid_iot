@@ -384,3 +384,101 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 for epoch in range(100):
     train(epoch, )
     best_loss=test( best_loss)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+def test_backup(best_loss ):
+    model.eval()
+    train_loss = 0
+    losses=[]
+
+    out_cont_list=[]
+    out_cat_list=[]
+
+    for batch_idx, (data, _) in enumerate(train_dataloader):
+        data = data.to(device)
+
+        out_cont, cat_outs, mu, logvar = model(data)
+        loss , recon, kld= loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
+        losses.extend(loss.cpu().detach().numpy())
+
+        output=None
+        for cat in cat_outs:
+            pred = cat.argmax(dim=1, keepdim=False)
+
+            if output is None:
+                output=torch.unsqueeze(pred, dim=1)
+            else:
+                output=torch.cat([output,torch.unsqueeze(pred, dim=1)], dim=1  )
+
+        out_cat_list.extend(output.cpu().detach().numpy())
+        out_cont_list.extend(out_cont.cpu().detach().numpy())
+
+    loss=np.mean(np.array(losses))
+    if loss<best_loss:
+        best_loss=loss
+        df=pd.DataFrame()
+        for col in range(len(float_cols)):
+            data_normalizer = preprocess.encoders[float_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cont_list)[:,col].reshape(-1,1))
+
+            df[float_cols[col]]=transformed_data[:,0]
+
+        for col in range(len(categorical_cols)):
+            data_normalizer=preprocess.encoders[categorical_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cat_list)[:,col].astype(int))
+            df[categorical_cols[col]]=transformed_data
+            #print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
+        df.to_csv(f"{base_dir}/vae/benign_{run_benign}.csv")
+
+        #randomly sample gaussian for synthetic examples.
+        for i in range(len(train_dataloader)):
+            #data = data.to(device)
+            sample = torch.randn(256, 64).to(device)
+            out_cont, cat_outs = model.decode(sample)#.cpu()
+
+            #out_cont, cat_outs, mu, logvar = model(sample)
+            #loss, recon, kld = loss_function(out_cont, cat_outs, data, mu, logvar, reduction='none')
+            #losses.extend(loss.cpu().detach().numpy())
+
+            output = None
+            for cat in cat_outs:
+                pred = cat.argmax(dim=1, keepdim=False)
+
+                if output is None:
+                    output = torch.unsqueeze(pred, dim=1)
+                else:
+                    output = torch.cat([output, torch.unsqueeze(pred, dim=1)], dim=1)
+
+            out_cat_list.extend(output.cpu().detach().numpy())
+            out_cont_list.extend(out_cont.cpu().detach().numpy())
+
+        df=pd.DataFrame()
+        for col in range(len(float_cols)):
+            data_normalizer = preprocess.encoders[float_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cont_list)[:,col].reshape(-1,1))
+
+            df[float_cols[col]]=transformed_data[:,0]
+
+        for col in range(len(categorical_cols)):
+            data_normalizer=preprocess.encoders[categorical_cols[col]]['encoder']
+            transformed_data=data_normalizer.inverse_transform(np.array(out_cat_list)[:,col].astype(int))
+            df[categorical_cols[col]]=transformed_data
+            #print(preprocess.encoders[categorical_cols[col]]['encoder'].inverse_transform(benign_np[:100,len(float_cols)].astype(int)))
+        df.to_csv(f"{base_dir}/vae/benign_{run_benign}_synthetic.csv")
+
+    return best_loss
+'''
