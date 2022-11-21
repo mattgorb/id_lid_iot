@@ -119,10 +119,10 @@ for a in range(0, X_test.shape[0], batch_size):
     sample_details = benign_gen[a:a + batch_size, :]
 
     pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size)
-    save_lids(pairwise_distances,3,sample_details, str(dataset)+'_benign_lids_syn_')
-    save_lids(pairwise_distances,5,sample_details, str(dataset)+'_benign_lids_syn_')
-    save_lids(pairwise_distances,10,sample_details, str(dataset)+'_benign_lids_syn_')
-    save_lids(pairwise_distances,20,sample_details, str(dataset)+'_benign_lids_syn_')
+    save_lids(pairwise_distances,3,sample_details, str(dataset)+f'_benign_lids_{args.syn_type}_')
+    save_lids(pairwise_distances,5,sample_details, str(dataset)+f'_benign_lids_{args.syn_type}_')
+    save_lids(pairwise_distances,10,sample_details, str(dataset)+f'_benign_lids_{args.syn_type}_')
+    save_lids(pairwise_distances,20,sample_details, str(dataset)+f'_benign_lids_{args.syn_type}_')
     print('{}/{}'.format(a+batch_size, X_test.shape[0]))
 
 
@@ -132,10 +132,10 @@ for a in range(0, mal_gen.shape[0], batch_size):
     sample_details = mal_gen[a:a + batch_size, :]
 
     pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size, train_set=False)
-    save_lids(pairwise_distances,3, sample_details,str(dataset)+'_mal_lids_syn_')
-    save_lids(pairwise_distances,5,sample_details, str(dataset)+'_mal_lids_syn_')
-    save_lids(pairwise_distances,10,sample_details, str(dataset)+'_mal_lids_syn_')
-    save_lids(pairwise_distances,20,sample_details, str(dataset)+'_mal_lids_syn_')
+    save_lids(pairwise_distances,3, sample_details,str(dataset)+f'_mal_lids_{args.syn_type}_')
+    save_lids(pairwise_distances,5,sample_details, str(dataset)+f'_mal_lids_{args.syn_type}_')
+    save_lids(pairwise_distances,10,sample_details, str(dataset)+f'_mal_lids_{args.syn_type}_')
+    save_lids(pairwise_distances,20,sample_details, str(dataset)+f'_mal_lids_{args.syn_type}_')
     print('{}/{}'.format(a+batch_size, X_test.shape[0]))
 
 
