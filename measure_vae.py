@@ -2,6 +2,7 @@
 from pairwise_distances import *
 from data_setup import df_to_np, calculate_weights
 from util.lid import calculate_lid, calculate_exactmatch
+from util.knn import calculate_knn
 from sklearn import metrics
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -111,6 +112,13 @@ def save_lids(pairwise_distances,k, sample_details,file_name):
         with open('results/'+file_name+str(k)+'.txt', "ab") as f:
             np.savetxt(f, lids)
 
+def save_knns(pairwise_distances,k, file_name):
+    knns = calculate_knn(pairwise_distances, k_=k)
+    if a==0:
+        np.savetxt('results/'+file_name+str(k)+'.txt', knns)
+    else:
+        with open('results/'+file_name+str(k)+'.txt', "ab") as f:
+            np.savetxt(f, knns)
 
 batch_size=1000
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
@@ -123,6 +131,18 @@ for a in range(0, X_test.shape[0], batch_size):
     save_lids(pairwise_distances,5,sample_details, str(dataset)+f'_benign_lids_{args.syn_type}_')
     save_lids(pairwise_distances,10,sample_details, str(dataset)+f'_benign_lids_{args.syn_type}_')
     save_lids(pairwise_distances,20,sample_details, str(dataset)+f'_benign_lids_{args.syn_type}_')
+
+    #pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size)
+    save_knns(pairwise_distances,3,sample_details, str(dataset)+f'_benign_knn_weighted_{args.syn_type}_')
+    save_knns(pairwise_distances,5,sample_details, str(dataset)+f'_benign_knn_weighted_{args.syn_type}_')
+    save_knns(pairwise_distances,10,sample_details, str(dataset)+f'_benign_knn_weighted_{args.syn_type}_')
+    save_knns(pairwise_distances,20,sample_details, str(dataset)+f'_benign_knn_weighted_{args.syn_type}_')
+
+    pairwise_distances=batch_distances(sample, X_train, weights=None, batch_size=batch_size)
+    save_knns(pairwise_distances,3,sample_details, str(dataset)+f'_benign_knn_unweighted_{args.syn_type}_')
+    save_knns(pairwise_distances,5,sample_details, str(dataset)+f'_benign_knn_unweighted_{args.syn_type}_')
+    save_knns(pairwise_distances,10,sample_details, str(dataset)+f'_benign_knn_unweighted_{args.syn_type}_')
+    save_knns(pairwise_distances,20,sample_details, str(dataset)+f'_benign_knn_unweighted_{args.syn_type}_')
     print('{}/{}'.format(a+batch_size, X_test.shape[0]))
 
 
@@ -136,6 +156,18 @@ for a in range(0, mal_gen.shape[0], batch_size):
     save_lids(pairwise_distances,5,sample_details, str(dataset)+f'_mal_lids_{args.syn_type}_')
     save_lids(pairwise_distances,10,sample_details, str(dataset)+f'_mal_lids_{args.syn_type}_')
     save_lids(pairwise_distances,20,sample_details, str(dataset)+f'_mal_lids_{args.syn_type}_')
+
+    #pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size)
+    save_knns(pairwise_distances,3,sample_details, str(dataset)+f'_mal_knn_weighted_{args.syn_type}_')
+    save_knns(pairwise_distances,5,sample_details, str(dataset)+f'_mal_knn_weighted_{args.syn_type}_')
+    save_knns(pairwise_distances,10,sample_details, str(dataset)+f'_mal_knn_weighted_{args.syn_type}_')
+    save_knns(pairwise_distances,20,sample_details, str(dataset)+f'_mal_knn_weighted_{args.syn_type}_')
+
+    pairwise_distances=batch_distances(sample, X_train, weights=None, batch_size=batch_size)
+    save_knns(pairwise_distances,3,sample_details, str(dataset)+f'_mal_knn_unweighted_{args.syn_type}_')
+    save_knns(pairwise_distances,5,sample_details, str(dataset)+f'_mal_knn_unweighted_{args.syn_type}_')
+    save_knns(pairwise_distances,10,sample_details, str(dataset)+f'_mal_knn_unweighted_{args.syn_type}_')
+    save_knns(pairwise_distances,20,sample_details, str(dataset)+f'_mal_knn_unweighted_{args.syn_type}_')
     print('{}/{}'.format(a+batch_size, X_test.shape[0]))
 
 
