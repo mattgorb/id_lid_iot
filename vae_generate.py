@@ -364,7 +364,7 @@ def test(best_loss ):
 
             a = trainset_cont[torch.randperm(trainset_cont.size()[0])][:10]
             print(a.size())
-            print(torch.cdist(da[:,:],a.cuda()))
+            print(torch.cdist(da[:,:].cpu(),a))
             sys.exit()
             output=None
             for cat in cat_outs:
