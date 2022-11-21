@@ -364,8 +364,11 @@ def test(best_loss ):
 
             a = trainset_cont[torch.randperm(trainset_cont.size()[0])][:10]
             print(a.size())
-            print(torch.cdist(da[:,:].float().cpu(),a.float()))
+            dists=torch.cdist(da[:,:].float().cpu(),a.float())
             print(torch.cdist(da[:,:].float().cpu(),a.float()).size())
+            dists_min=torch.argmin(dists, dim=0, keepdim=False)
+            print(dists_min)
+            print(dists_min.size())
             sys.exit()
             output=None
             for cat in cat_outs:
