@@ -30,8 +30,8 @@ if dataset=='ton_iot':
     mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
 
     X_train, X_test =benign_np, benign_gen
-
-
+    x=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
+    print(x[0])
     print(X_train[0])
     print(X_test[0])
     sys.exit()
