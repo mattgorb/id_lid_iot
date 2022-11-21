@@ -40,7 +40,7 @@ class Preprocess():
             if col=='label' or col=='ts' or col=='type' or col=='label string' or col in self.datatypes:
                 return 'default'
             elif (self.df[col].dtype == int or self.df[col].dtype == float) and (len(self.df[col].unique()) >= 60):
-                print((len(self.df[col].unique()) )
+                print((len(self.df[col].unique()) ))
                 return 'minmax'
             else:
                 return 'categorical'
