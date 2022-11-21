@@ -362,7 +362,7 @@ def test(best_loss ):
             print(out_cont.size())
             print(train_dataloader.dataset[:][0][:,:num_fts].size())
 
-            a = trainset_cont[torch.randperm(trainset_cont.size()[0])][:10]
+            a = trainset_cont[torch.randperm(trainset_cont.size()[0])][:1000]
             print(a.size())
             dists=torch.cdist(da[:,:].float().cpu(),a.float())
             print(torch.cdist(da[:,:].float().cpu(),a.float()).size())
