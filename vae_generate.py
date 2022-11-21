@@ -363,6 +363,7 @@ def test(best_loss ):
             print(train_dataloader.dataset[:][0][:,:num_fts].size())
 
             a = trainset_cont[torch.randperm(trainset_cont.size()[0])][:1000]
+            print(a.size())
             print(torch.cdist(da[:,:],a.cuda()))
             sys.exit()
             output=None
