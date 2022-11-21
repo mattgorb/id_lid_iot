@@ -12,8 +12,10 @@ parser = argparse.ArgumentParser(description='VAE')
 parser.add_argument('--dataset', type=str, default=None, metavar='N',
                     help='prior')
 
-parser.add_argument('--run_benign', type=bool, default=True, metavar='N',
-                    help='prior')
+parser.add_argument('--run_benign', type=bool, default=True, metavar='N',)
+
+parser.add_argument('--syn_type', type=str, default=None, metavar='N',)
+
 args = parser.parse_args()
 
 dataset=args.dataset
@@ -88,8 +90,10 @@ elif dataset=='kaggle_nid':
     from data_preprocess.drop_columns import kaggle_nid
     benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True)
 
-    benign_gen=np.load(f"{directory}/vae/syn_benign_True_ds_{dataset}.npy")
-    mal_gen = np.load(f"{directory}/vae/syn_benign_False_ds_{dataset}.npy")
+
+    #args.syn_type=syn or recon
+    benign_gen=np.load(f"{directory}/vae/{args.syn_type}_benign_True_ds_{dataset}.npy")
+    mal_gen = np.load(f"{directory}/vae/{args.syn_type}_benign_False_ds_{dataset}.npy")
 
     X_train, X_test =benign_np, benign_gen
 

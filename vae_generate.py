@@ -181,7 +181,6 @@ elif dataset=='kaggle_nid':
 
 
     if run_benign:
-
         X_train, X_test =benign_np, benign_np
     else:
         X_train, X_test = mal_np, mal_np
