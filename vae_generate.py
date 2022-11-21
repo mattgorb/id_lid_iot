@@ -353,8 +353,6 @@ def test(best_loss ):
 
             sample = torch.randn(256, 8).to(device)
             out_cont, cat_outs = model.decode(sample)  # .cpu()
-
-
             output=None
             for cat in cat_outs:
                 pred = cat.argmax(dim=1, keepdim=False)
@@ -367,7 +365,7 @@ def test(best_loss ):
             out_cat_list.extend(output.cpu().detach().numpy())
             out_cont_list.extend(out_cont.cpu().detach().numpy())
         np.save(f"{base_dir}/vae/syn_benign_{run_benign}_ds_{dataset}.npy", recon_syn)
-
+        print(out_cont[0, :].double())
     return best_loss
 
     #sys.exit()
