@@ -332,19 +332,15 @@ def test(best_loss ):
 
         recon_loss = F.mse_loss(out_cont.double(), data[:, :out_cont.size(1)].double(), reduction='none')
 
-        print(out_cont)
-        print(data[:, :out_cont.size(1)].double())
-        print(data[:, :out_cont.size(1)].size())
-        print(recon_loss)
-        print(recon_loss.size())
-        print(out_cont.size())
-        out_cont_final = torch.where(recon_loss < 0.05, data[:, :out_cont.size(1)].double(), out_cont.double())
-        print(out_cont_final)
-        sys.exit()
+
+        out_cont_final = torch.where(recon_loss < 0.0025, data[:, :out_cont.size(1)].double(), out_cont.double())
+
 
         out_cat_list.extend(output.cpu().detach().numpy())
-        out_cont_list.extend(out_cont.cpu().detach().numpy())
+        out_cont_list.extend(out_cont_final.cpu().detach().numpy())
 
+    print( data[0, :out_cont.size(1)].double())
+    print(out_cont[0,:].double())
     if np.mean(losses)<best_loss:
         print("Generating new synthetic examples...")
         best_loss=np.mean(losses)
