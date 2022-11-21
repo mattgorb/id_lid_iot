@@ -469,7 +469,8 @@ x=torch.from_numpy(X_train)
 my_dataset = TensorDataset(x, y)
 train_dataloader = DataLoader(my_dataset, batch_size=256)  # create your dataloader
 
-
+print(train_dataloader.dataset[:])
+sys.exit()
 
 
 
