@@ -145,6 +145,11 @@ for a in range(0, X_test.shape[0], batch_size):
     save_knns(pairwise_distances,20, str(dataset)+f'_benign_knn_unweighted_{args.syn_type}_')
     print('{}/{}'.format(a+batch_size, X_test.shape[0]))
 
+    save_lids(pairwise_distances,3, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
+    save_lids(pairwise_distances,5, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
+    save_lids(pairwise_distances,10, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
+    save_lids(pairwise_distances,20, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
+
 
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
 for a in range(0, mal_gen.shape[0], batch_size):
