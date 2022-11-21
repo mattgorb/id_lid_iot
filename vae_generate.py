@@ -195,7 +195,7 @@ elif dataset=='kaggle_nid':
         cat_out.append(n_cats)
 
     input_dim+=cont_dim
-
+sys.exit()
 
 
 
