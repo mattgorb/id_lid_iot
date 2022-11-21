@@ -356,14 +356,14 @@ def test(best_loss ):
         for batch_idx, (data, _) in enumerate(train_dataloader):
             data = data.to(device)
 
-            sample = torch.randn(256, 8).to(device)
+            sample = torch.randn(data.size(0), 8).to(device)
             out_cont, cat_outs = model.decode(sample)  # .cpu()
 
 
             da = data[:, :num_fts].float()
 
 
-            a = trainset_cont[torch.randperm(trainset_cont.size()[0])][:5000]
+            a = trainset_cont[torch.randperm(trainset_cont.size()[0])][:2500]
             dists=torch.cdist(da[:,:].float().cpu(),a.float())
             dists_min=torch.argmin(dists, dim=1, keepdim=False)
 
