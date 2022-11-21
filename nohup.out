@@ -1,0 +1,6 @@
+/s/luffy/b/nobackup/mgorb/anaconda/envs/transformers/lib/python3.7/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: /s/luffy/b/nobackup/mgorb/anaconda/envs/transformers/lib/python3.7/site-packages/torchvision/image.so: undefined symbol: _ZN3c106detail19maybe_wrap_dim_slowEllb
+  warn(f"Failed to load image Python extension: {e}")
+usage: vae_generate.py [-h] [--batch-size N] [--epochs N] [--no-cuda]
+                       [--seed S] [--log-interval N] [--prior N] [--dataset N]
+                       [--run_benign N] [--gpu N]
+vae_generate.py: error: unrecognized arguments: /s/chopin/l/grad/mgorb/out/11.txt
