@@ -366,7 +366,7 @@ def test(best_loss ):
             print(a.size())
             dists=torch.cdist(da[:,:].float().cpu(),a.float())
             print(torch.cdist(da[:,:].float().cpu(),a.float()).size())
-            dists_min=torch.argmin(dists, dim=0, keepdim=False)
+            dists_min=torch.argmin(dists, dim=1, keepdim=False)
             print(dists_min)
             print(dists_min.size())
             sys.exit()
