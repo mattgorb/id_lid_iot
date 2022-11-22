@@ -24,15 +24,16 @@ ood_lids=list(np.loadtxt(f'results/{args.dataset}_mal_{args.algorithm}_{args.syn
 #ood_lids=pd.read_csv('results/results/ton_iot_mal_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=list(ood_lids)
 #in_dist_lids=list(in_dist_lids)
-
+print(len(ood_lids))
 ood_lids = [i for i in ood_lids if i != 0]
+print(len(ood_lids))
 
 #Results
 labels=[1 for i in ood_lids]+[0 for i in in_dist_lids]
-print(len(in_dist_lids))
-print(len(ood_lids))
-print(len(ood_lids)+len(in_dist_lids))
-print(len(labels))
+##print(len(in_dist_lids))
+#print(len(ood_lids))
+#print(len(ood_lids)+len(in_dist_lids))
+#print(len(labels))
 print("ROC")
 print(metrics.roc_auc_score(labels, list(ood_lids)+list(in_dist_lids)))
 precision, recall, thresholds = metrics.precision_recall_curve(labels, list(ood_lids)+list(in_dist_lids))
