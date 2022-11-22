@@ -28,6 +28,9 @@ print(len(ood_lids))
 ood_lids = [i for i in ood_lids if i != 0]
 print(len(ood_lids))
 
+print(np.mean(np.array(ood_lids)))
+print(np.mean(np.array(in_dist_lids)))
+
 #Results
 labels=[1 for i in ood_lids]+[0 for i in in_dist_lids]
 ##print(len(in_dist_lids))
