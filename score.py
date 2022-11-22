@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 
 in_dist_lids=list(np.loadtxt(f'results/{args.dataset}_benign_{args.algorithm}_{args.syn_type}_'+str(args.k)+'.txt'))
-ood_lids=    list(np.loadtxt(f'results/{args.dataset}_mal_{args.algorithm}_{args.syn_type}_'+str(args.k)+'.txt'))
+ood_lids=list(np.loadtxt(f'results/{args.dataset}_mal_{args.algorithm}_{args.syn_type}_'+str(args.k)+'.txt'))
 
 #in_dist_lids=pd.read_csv('results/unsw_nb15_benign_lids_expanded_'+str(k)+'.csv')['value'].values
 #ood_lids=pd.read_csv('results/unsw_nb15_mal_lids_expanded_'+str(k)+'.csv')['value'].values
@@ -25,7 +25,7 @@ ood_lids=    list(np.loadtxt(f'results/{args.dataset}_mal_{args.algorithm}_{args
 #ood_lids=list(ood_lids)
 #in_dist_lids=list(in_dist_lids)
 
-#ood_lids = [i for i in ood_lids if i != 0]
+ood_lids = [i for i in ood_lids if i != 0]
 
 #Results
 labels=[1 for i in ood_lids]+[0 for i in in_dist_lids]
