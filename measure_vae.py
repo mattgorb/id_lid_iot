@@ -100,7 +100,15 @@ elif dataset=='kaggle_nid':
 
     feature_weights=calculate_weights(X_train)
 
+elif dataset=='nf-cse-cic':
+    from data_preprocess.drop_columns import nf_cse_cic
+    benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np
 
+    feature_weights=calculate_weights(X_train)
+
+    print(benign_np.shape)
 
 
 def save_lids(pairwise_distances,k,file_name):
