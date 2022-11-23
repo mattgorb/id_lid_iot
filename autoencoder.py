@@ -336,6 +336,9 @@ def test(epoch, best_loss ):
 
     print(len(test_dataloader.dataset))
     print(len(malicious_dataloader.dataset))
+    print(len(labels))
+
+    print(len(losses))
 
     #print(losses[:25])
     #print(losses[len(test_dataloader.dataset):len(test_dataloader.dataset)+25])
