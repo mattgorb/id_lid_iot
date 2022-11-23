@@ -77,12 +77,25 @@ elif dataset=='csu':
 
     print(benign_np.shape)
 
-
     df = pd.read_csv('csv/csu/features.csv')
     df_benign = df
     idxs=['device']
     benign_ips_attacks = df_benign[idxs].to_numpy()
 
+elif dataset=='nf-cse-cic':
+    from data_preprocess.drop_columns import nf_cse_cic
+    benign_np =df_to_np('csv/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
+    #mal_np=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np
+
+    feature_weights=calculate_weights(X_train)
+
+    print(benign_np.shape)
+
+    df = pd.read_csv('csv/csu/features.csv')
+    df_benign = df
+    idxs=['device']
+    benign_ips_attacks = df_benign[idxs].to_numpy()
 
 def save_lids(pairwise_distances,k,sample_details, file_name):
     lids = np.expand_dims(np.array(calculate_id(pairwise_distances, k_=k)), axis=1)
@@ -91,7 +104,7 @@ def save_lids(pairwise_distances,k,sample_details, file_name):
         df=pd.DataFrame( result, columns=['value']+idxs, )
     else:
         df2=pd.DataFrame(result, columns=['value']+idxs)
-        df=pd.read_csv('results2/id/'+file_name+str(k)+'.csv')
+        df=pd.read_csv('results/id/'+file_name+str(k)+'.csv')
         df=df.append(df2)
     df.to_csv('results/id/'+file_name+str(k)+'.csv', index=False)
 

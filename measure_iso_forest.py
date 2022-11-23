@@ -7,7 +7,7 @@ from sklearn.ensemble import IsolationForest
 from data_setup import df_to_np, calculate_weights
 
 
-dataset='kaggle_nid'
+dataset='nf-cse-cic'
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
     benign_np=df_to_np('csv/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)
@@ -60,6 +60,13 @@ elif dataset=='kaggle_nid':
     X_train, X_test =benign_np, benign_np
 
     feature_weights=calculate_weights(X_train)
+elif dataset=='nf-cse-cic':
+    from data_preprocess.drop_columns import nf_cse_cic
+    benign_np =df_to_np('csv/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
+    mal_np=df_to_np('csv/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
+    X_train, X_test =benign_np, benign_np
+
+
 
 
 full = np.concatenate([X_test, mal_np], axis=0)
