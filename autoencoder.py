@@ -322,7 +322,7 @@ def test(epoch, best_loss ):
         break
     num_fts = x.size(1) - len(cat_outs)
 
-
+    print(len(losses))
     for batch_idx, (data, _) in enumerate(malicious_dataloader):
         data = data.to(device)
 
