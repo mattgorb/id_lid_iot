@@ -11,9 +11,9 @@ dataset='ton_iot'
 directory='/s/luffy/b/nobackup/mgorb/iot/'
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
-    benign_np=df_to_np('csv/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)
+    benign_np=df_to_np(f'{directory}/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)
 
-    mal_np=df_to_np('csv/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False)
+    mal_np=df_to_np(f'{directory}/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False)
 
     if syn:
         print("synthetic")
@@ -26,8 +26,8 @@ if dataset=='ton_iot':
 elif dataset=='iot23':
     from data_preprocess.drop_columns import iot23
 
-    benign_np = df_to_np( 'csv/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=True)
-    mal_np = df_to_np( 'csv/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=False)
+    benign_np = df_to_np( f'{directory}/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=True)
+    mal_np = df_to_np( f'{directory}/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=False)
 
     if syn:
         print("synthetic")
@@ -46,8 +46,8 @@ elif dataset=='iot23':
 
 elif dataset=='nf_bot_iot':
     from data_preprocess.drop_columns import nf_bot_iot
-    benign_np =df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True)
-    mal_np=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
+    benign_np =df_to_np(f'{directory}/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True)
+    mal_np=df_to_np(f'{directory}/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
 
     if syn:
         print("synthetic")
@@ -90,8 +90,8 @@ elif dataset=='kaggle_nid':
     feature_weights=calculate_weights(X_train)
 elif dataset=='nf-cse-cic':
     from data_preprocess.drop_columns import nf_cse_cic
-    benign_np =df_to_np('csv/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
-    mal_np=df_to_np('csv/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
+    benign_np =df_to_np(f'{directory}/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
+    mal_np=df_to_np(f'{directory}/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
 
 
