@@ -336,7 +336,7 @@ def test(epoch, best_loss ):
 
     print(len(test_dataloader.dataset))
     print(len(malicious_dataloader.dataset))
-    print(len(labels))
+    #print(len(labels))
 
     print(len(losses))
 
