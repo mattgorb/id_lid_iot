@@ -334,6 +334,9 @@ def test(epoch, best_loss ):
     print('mean malicious')
     print(np.mean(np.array(losses[len(test_dataloader.dataset):])))
 
+    print(len(test_dataloader.dataset))
+    print(len(malicious_dataloader.dataset))
+
     #print(losses[:25])
     #print(losses[len(test_dataloader.dataset):len(test_dataloader.dataset)+25])
     labels=[0 for i in range(len(test_dataloader.dataset))]+[1 for i in range(len(malicious_dataloader.dataset))]
