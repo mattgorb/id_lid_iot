@@ -189,8 +189,8 @@ elif dataset=='kaggle_nid':
 
 elif dataset=='nf-cse-cic':
     from data_preprocess.drop_columns import nf_cse_cic
-    benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True, return_preprocess=True)
-    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
+    benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True, return_preprocess=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
 
     print(float_cols)
