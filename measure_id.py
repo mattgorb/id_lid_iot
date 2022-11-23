@@ -6,7 +6,7 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-dataset='csu'
+dataset='nf-cse-cic'
 directory='/s/luffy/b/nobackup/mgorb/iot/'
 directory='csv/'
 if dataset=='ton_iot':
@@ -84,17 +84,18 @@ elif dataset=='csu':
 
 elif dataset=='nf-cse-cic':
     from data_preprocess.drop_columns import nf_cse_cic
-    benign_np =df_to_np('csv/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
-    #mal_np=df_to_np('csv/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
+    benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
+    mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
 
     feature_weights=calculate_weights(X_train)
 
     print(benign_np.shape)
 
-    df = pd.read_csv('csv/csu/features.csv')
-    df_benign = df
-    idxs=['device']
+
+    df = pd.read_csv('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv')
+    df_benign = df[df['Label'] == 0]
+    idxs=['IPV4_SRC_ADDR', 'IPV4_DST_ADDR', 'Attack']
     benign_ips_attacks = df_benign[idxs].to_numpy()
 
 def save_lids(pairwise_distances,k,sample_details, file_name):
