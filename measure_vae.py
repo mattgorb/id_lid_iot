@@ -105,7 +105,7 @@ elif dataset=='nf-cse-cic':
     benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
-
+    benign_gen=benign_np
     feature_weights=calculate_weights(X_train)
 
     print(benign_np.shape)
