@@ -33,6 +33,11 @@ parser.add_argument('--prior', type=str, default='standard', metavar='N',
                     help='prior')
 parser.add_argument('--dataset', type=str, default=None, metavar='N',
                     help='prior')
+
+parser.add_argument('--syn', type=bool, default=False, metavar='N',
+                    help='prior')
+
+
 args = parser.parse_args()
 
 
@@ -59,10 +64,15 @@ cont_dim=0
 input_dim=0
 
 base_dir='/s/luffy/b/nobackup/mgorb/iot'
+directory='/s/luffy/b/nobackup/mgorb/iot/'
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
     benign_np, preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True, return_preprocess=True)
     mal_np=df_to_np(f'{base_dir}/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
+    if args.syn:
+        print('synthetic')
+        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
 
     '''run_benign=True
     if run_benign:
@@ -96,6 +106,10 @@ elif dataset=='iot23':
     benign_np, preprocess, float_cols, categorical_cols = df_to_np( f'{base_dir}/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=True, return_preprocess=True)
 
     mal_np = df_to_np( f'{base_dir}/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=False)
+    if args.syn:
+        print('synthetic')
+        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
 
     test_split=int(benign_np.shape[0]*.8)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
@@ -121,7 +135,10 @@ elif dataset=='nf_bot_iot':
     from data_preprocess.drop_columns import nf_bot_iot
     benign_np , preprocess, float_cols, categorical_cols=df_to_np(f'{base_dir}/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np(f'{base_dir}/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
-
+    if args.syn:
+        print('synthetic')
+        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
     test_split=int(benign_np.shape[0]*.8)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
     #X_train, X_test = benign_np, benign_np
@@ -145,7 +162,10 @@ elif dataset=='unsw_nb15':
     #benign_np_test , _, _, _=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_testing-set.csv', unsw_n15.datatypes,train_set=True, return_preprocess=True)
 
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
-
+    if args.syn:
+        print('synthetic')
+        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
     test_split=int(benign_np.shape[0]*.8)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
     #X_train, X_test = benign_np, benign_np
@@ -165,7 +185,10 @@ elif dataset=='kaggle_nid':
     from data_preprocess.drop_columns import kaggle_nid
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
-
+    if args.syn:
+        print('synthetic')
+        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
     test_split=int(benign_np.shape[0]*.8)
     X_train, X_test =benign_np[:test_split], benign_np[test_split:]
     #X_train, X_test = benign_np, benign_np
@@ -185,6 +208,11 @@ elif dataset=='nf-cse-cic':
     from data_preprocess.drop_columns import nf_cse_cic
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
+    if args.syn:
+        print('synthetic')
+        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+
     X_train, X_test =benign_np, benign_np
 
     print(float_cols)

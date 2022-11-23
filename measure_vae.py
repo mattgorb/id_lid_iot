@@ -106,6 +106,7 @@ elif dataset=='nf-cse-cic':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
     benign_gen=benign_np
+    mal_gen=mal_np
     feature_weights=calculate_weights(X_train)
 
     print(benign_np.shape)
@@ -130,7 +131,7 @@ def save_knns(pairwise_distances,k, file_name):
 
 batch_size=1000
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
-for a in range(0, X_test.shape[0], batch_size):
+'''for a in range(0, X_test.shape[0], batch_size):
     sample= X_test[a:a + batch_size, :]
     sample_details = benign_gen[a:a + batch_size, :]
 
@@ -156,7 +157,7 @@ for a in range(0, X_test.shape[0], batch_size):
     save_lids(pairwise_distances,3, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
     save_lids(pairwise_distances,5, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
     save_lids(pairwise_distances,10, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
-    save_lids(pairwise_distances,20, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
+    save_lids(pairwise_distances,20, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')'''
 
 
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
