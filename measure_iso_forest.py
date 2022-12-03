@@ -19,7 +19,7 @@ if dataset=='ton_iot':
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         print(syn_np.shape)
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+        #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
     benign_np = np.concatenate([benign_np, syn_np], axis=0)
     print(benign_np.shape)
 
@@ -35,7 +35,7 @@ elif dataset=='iot23':
     if syn:
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+        #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
     benign_np = np.concatenate([benign_np, syn_np], axis=0)
     X_train, X_test = benign_np, syn_np
     feature_weights = calculate_weights(X_train)
@@ -55,7 +55,7 @@ elif dataset=='nf_bot_iot':
     if syn:
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+        #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
     benign_np = np.concatenate([benign_np, syn_np], axis=0)
     X_train, X_test =benign_np, syn_np
 
@@ -73,7 +73,7 @@ elif dataset=='unsw_nb15':
     if syn:
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+        #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
     benign_np = np.concatenate([benign_np, syn_np], axis=0)
     X_train, X_test =benign_np, syn_np
 
@@ -86,7 +86,7 @@ elif dataset=='kaggle_nid':
     if syn:
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+        #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
 
     benign_np = np.concatenate([benign_np, syn_np], axis=0)
     X_train, X_test =benign_np, syn_np
