@@ -7,7 +7,7 @@ from sklearn.ensemble import IsolationForest
 from data_setup import df_to_np, calculate_weights
 
 syn=True
-dataset='iot23'
+dataset='nf_bot_iot'
 directory='/s/luffy/b/nobackup/mgorb/iot/'
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
