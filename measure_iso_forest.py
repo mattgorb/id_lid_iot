@@ -7,7 +7,7 @@ from sklearn.ensemble import IsolationForest
 from data_setup import df_to_np, calculate_weights
 
 syn=True
-dataset='nf_bot_iot'
+dataset='ton_iot'
 directory='/s/luffy/b/nobackup/mgorb/iot/'
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
@@ -18,8 +18,12 @@ if dataset=='ton_iot':
     if syn:
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        print(syn_np.shape)
         mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    print(benign_np.shape)
     benign_np = np.concatenate([benign_np, syn_np], axis=0)
+    print(benign_np.shape)
+    sys.exit()
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
     X_train, X_test =benign_np, syn_np
     feature_weights=calculate_weights(X_train)
