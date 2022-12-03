@@ -17,9 +17,9 @@ if dataset=='ton_iot':
 
     if syn:
         print("synthetic")
-        benign_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
     X_train, X_test =benign_np, benign_np
     feature_weights=calculate_weights(X_train)
@@ -31,9 +31,9 @@ elif dataset=='iot23':
 
     if syn:
         print("synthetic")
-        benign_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
     X_train, X_test = benign_np, benign_np
     feature_weights = calculate_weights(X_train)
 
@@ -51,9 +51,9 @@ elif dataset=='nf_bot_iot':
 
     if syn:
         print("synthetic")
-        benign_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
     X_train, X_test =benign_np, benign_np
 
     feature_weights=calculate_weights(X_train)
@@ -69,9 +69,9 @@ elif dataset=='unsw_nb15':
 
     if syn:
         print("synthetic")
-        benign_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
     X_train, X_test =benign_np, benign_np
 
     X_train = X_train.astype('float64')
@@ -82,17 +82,14 @@ elif dataset=='kaggle_nid':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
     if syn:
         print("synthetic")
-        benign_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+        syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
 
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
     X_train, X_test =benign_np, benign_np
 
     feature_weights=calculate_weights(X_train)
-elif dataset=='nf-cse-cic':
-    from data_preprocess.drop_columns import nf_cse_cic
-    benign_np =df_to_np(f'{directory}/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
-    mal_np=df_to_np(f'{directory}/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
-    X_train, X_test =benign_np, benign_np
+
 
 
 
