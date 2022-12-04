@@ -1,0 +1,5 @@
+nohup python3 -u measure_vae_testset_syn.py --dataset=kaggle_nid   > ~/out/50.txt 2>&1 &
+nohup python3 -u measure_vae_testset_syn.py --dataset=unsw_nb15 > ~/out/51.txt 2>&1 &
+nohup python3 -u measure_vae_testset_syn.py --dataset=nf_bot_iot > ~/out/52.txt 2>&1 &
+nohup python3 -u measure_vae_testset_syn.py --dataset=iot23 > ~/out/53.txt 2>&1 &
+nohup python3 -u measure_vae_testset_syn.py --dataset=ton_iot > ~/out/54.txt 2>&1 &

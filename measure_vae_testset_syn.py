@@ -126,7 +126,7 @@ elif dataset=='nf-cse-cic':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
     benign_gen=benign_np
-    mal_gen=mal_np
+    mal_np=mal_np
     feature_weights=calculate_weights(X_train)
 
     print(benign_np.shape)
@@ -144,9 +144,9 @@ def save_lids(pairwise_distances,k,file_name):
 def save_knns(pairwise_distances,k, file_name):
     knns = calculate_knn(pairwise_distances, k_=k)
     if a==0:
-        np.savetxt('results/'+file_name+str(k)+'.txt', knns)
+        np.savetxt('/s/luffy/b/nobackup/mgorb/results/'+file_name+str(k)+'.txt', knns)
     else:
-        with open('results/'+file_name+str(k)+'.txt', "ab") as f:
+        with open('/s/luffy/b/nobackup/mgorb/results/'+file_name+str(k)+'.txt', "ab") as f:
             np.savetxt(f, knns)
 
 batch_size=1000
@@ -178,9 +178,9 @@ for a in range(0, X_test.shape[0], batch_size):
 
 
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
-for a in range(0, mal_gen.shape[0], batch_size):
-    sample= mal_gen[a:a + batch_size, :]
-    sample_details = mal_gen[a:a + batch_size, :]
+for a in range(0, mal_np.shape[0], batch_size):
+    sample= mal_np[a:a + batch_size, :]
+    sample_details = mal_np[a:a + batch_size, :]
 
     pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size, train_set=False)
     save_lids(pairwise_distances,3,str(dataset)+f'_mal_lids_recon_testset_')
