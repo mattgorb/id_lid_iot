@@ -129,9 +129,9 @@ def save_lids(pairwise_distances,k,file_name):
     lids = np.expand_dims(np.array(calculate_lid(pairwise_distances, k_=k)), axis=1)
 
     if a==0:
-        np.savetxt('results/'+file_name+str(k)+'.txt', lids)
+        np.savetxt('/s/luffy/b/nobackup/mgorb/results/'+file_name+str(k)+'.txt', lids)
     else:
-        with open('results/'+file_name+str(k)+'.txt', "ab") as f:
+        with open('/s/luffy/b/nobackup/mgorb/results/'+file_name+str(k)+'.txt', "ab") as f:
             np.savetxt(f, lids)
 
 def save_knns(pairwise_distances,k, file_name):
