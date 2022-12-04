@@ -74,13 +74,13 @@ if dataset=='ton_iot':
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False, return_preprocess=False)
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
 
-    if args.syn:
-        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    print("synthetic")
+    syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+    print(syn_np.shape)
+    mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
 
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    #X_train, X_test = benign_np, benign_np
+    X_train, X_test = benign_np, syn_np
 
 
     X_train = X_train.astype('float64')
@@ -102,15 +102,17 @@ elif dataset=='iot23':
     benign_np, preprocess, float_cols, categorical_cols = df_to_np( '/s/luffy/b/nobackup/mgorb/iot/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=True, return_preprocess=True)
     mal_np = df_to_np( '/s/luffy/b/nobackup/mgorb/iot/iot23/iot23_sample_with_real.csv', iot23.datatypes, train_set=False)
 
-    if args.syn:
-        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    print("synthetic")
+    syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+    print(syn_np.shape)
+    mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
 
-    X_train, X_test = benign_np, benign_np
-    feature_weights = calculate_weights(X_train)
+    X_train, X_test = benign_np, syn_np
+    #feature_weights = calculate_weights(X_train)
 
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    #test_split=int(benign_np.shape[0]*.8)
+    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
     #X_train, X_test = benign_np, benign_np
 
 
@@ -132,13 +134,14 @@ elif dataset=='nf_bot_iot':
     benign_np , preprocess, float_cols, categorical_cols=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf_bot_iot/NF-BoT-IoT.csv', nf_bot_iot.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf_bot_iot/NF-BoT-IoT.csv',  nf_bot_iot.datatypes,train_set=False)
 
-    if args.syn:
-        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    #X_train, X_test = benign_np, benign_np
+    print("synthetic")
+    syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+    print(syn_np.shape)
+    mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
+    #test_split=int(benign_np.shape[0]*.8)
+    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    X_train, X_test = benign_np, syn_np
 
 
     X_train = X_train.astype('float64')
@@ -161,13 +164,15 @@ elif dataset=='unsw_nb15':
 
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/unsw-nb15/UNSW_NB15_training-set.csv',  unsw_n15.datatypes,train_set=False)
 
-    if args.syn:
-        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    print("synthetic")
+    syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+    print(syn_np.shape)
+    mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
 
-    test_split=int(benign_np.shape[0]*.8)
-    X_train, X_test =benign_np[:test_split], benign_np[test_split:]
-    #X_train, X_test = benign_np, benign_np
+    #test_split=int(benign_np.shape[0]*.8)
+    #X_train, X_test =benign_np[:test_split], benign_np[test_split:]
+    X_train, X_test = benign_np, syn_np
 
 
     X_train = X_train.astype('float64')
@@ -186,9 +191,11 @@ elif dataset=='kaggle_nid':
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv', kaggle_nid.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/kaggle_nid/Train_data.csv',  kaggle_nid.datatypes,train_set=False)
 
-    if args.syn:
-        benign_np=np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
-        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    print("synthetic")
+    syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+    print(syn_np.shape)
+    mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
 
     print(float_cols)
     print(categorical_cols)
@@ -212,6 +219,14 @@ elif dataset=='nf-cse-cic':
     from data_preprocess.drop_columns import nf_cse_cic
     benign_np , preprocess, float_cols, categorical_cols =df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True, return_preprocess=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
+
+
+    print("synthetic")
+    syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+    print(syn_np.shape)
+    mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+    benign_np = np.concatenate([benign_np, syn_np], axis=0)
+
     X_train, X_test =benign_np, benign_np
 
     print(float_cols)

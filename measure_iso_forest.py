@@ -19,7 +19,7 @@ if dataset=='ton_iot':
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         print(syn_np.shape)
-        #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+        mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
     benign_np = np.concatenate([benign_np, syn_np], axis=0)
     print(benign_np.shape)
 

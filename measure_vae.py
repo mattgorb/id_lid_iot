@@ -26,12 +26,16 @@ directory='/s/luffy/b/nobackup/mgorb/iot/'
 #directory='csv/'
 if dataset=='ton_iot':
     from data_preprocess.drop_columns import ton_iot
-    benign_np=df_to_np(directory+'/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)
+    benign_np=df_to_np(f'{directory}/ton_iot/Train_Test_Network.csv',ton_iot.datatypes, train_set=True)
 
+    mal_np=df_to_np(f'{directory}/ton_iot/Train_Test_Network.csv', ton_iot.datatypes,train_set=False)
 
-    #args.syn_type=syn or recon
-    benign_gen=np.load(f"{directory}/vae/{args.syn_type}_benign_True_ds_{dataset}.npy")
-    mal_gen = np.load(f"{directory}/vae/{args.syn_type}_benign_False_ds_{dataset}.npy")
+    print("synthetic")
+    benign_gen = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
+    print(syn_np.shape)
+    #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
+
+    benign_np = np.concatenate([benign_np, benign_gen], axis=0)
 
     X_train, X_test =benign_np, benign_gen
 
@@ -131,7 +135,7 @@ def save_knns(pairwise_distances,k, file_name):
 
 batch_size=1000
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
-'''for a in range(0, X_test.shape[0], batch_size):
+for a in range(0, X_test.shape[0], batch_size):
     sample= X_test[a:a + batch_size, :]
     sample_details = benign_gen[a:a + batch_size, :]
 
@@ -157,7 +161,7 @@ print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_siz
     save_lids(pairwise_distances,3, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
     save_lids(pairwise_distances,5, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
     save_lids(pairwise_distances,10, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
-    save_lids(pairwise_distances,20, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')'''
+    save_lids(pairwise_distances,20, str(dataset)+f'_benign_lids_unweighted_{args.syn_type}_')
 
 
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
