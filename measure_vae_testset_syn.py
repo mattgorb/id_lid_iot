@@ -40,9 +40,9 @@ if dataset=='ton_iot':
     X_train, X_test =benign_np, syn_np
     #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
 
-    #benign_np = np.concatenate([benign_np, benign_gen], axis=0)
+    #benign_np = np.concatenate([benign_np, benign_np], axis=0)
 
-    #X_train, X_test =benign_np, benign_gen
+    #X_train, X_test =benign_np, benign_np
 
 
     feature_weights=calculate_weights(X_train)
@@ -125,7 +125,7 @@ elif dataset=='nf-cse-cic':
     benign_np =df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv', nf_cse_cic.datatypes,train_set=True)
     mal_np=df_to_np('/s/luffy/b/nobackup/mgorb/iot/nf-cse-cic/nf-cse-cic-sample.csv',  nf_cse_cic.datatypes,train_set=False)
     X_train, X_test =benign_np, benign_np
-    benign_gen=benign_np
+    benign_np=benign_np
     mal_np=mal_np
     feature_weights=calculate_weights(X_train)
 
@@ -153,7 +153,7 @@ batch_size=1000
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
 for a in range(0, X_test.shape[0], batch_size):
     sample= X_test[a:a + batch_size, :]
-    sample_details = benign_gen[a:a + batch_size, :]
+    sample_details = benign_np[a:a + batch_size, :]
 
     pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size)
     save_lids(pairwise_distances,3, str(dataset)+f'_benign_lids_recon_testset_')

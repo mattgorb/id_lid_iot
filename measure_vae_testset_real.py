@@ -146,7 +146,7 @@ batch_size=1000
 print('total batches dataset/{}={}'.format(batch_size, X_test.shape[0]/batch_size))
 for a in range(0, X_test.shape[0], batch_size):
     sample= X_test[a:a + batch_size, :]
-    sample_details = benign_gen[a:a + batch_size, :]
+    sample_details = benign_np[a:a + batch_size, :]
 
     pairwise_distances=batch_distances(sample, X_train, weights=feature_weights, batch_size=batch_size)
     save_lids(pairwise_distances,3, str(dataset)+f'_benign_lids_real_testset')
