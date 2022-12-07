@@ -20,11 +20,11 @@ if dataset=='ton_iot':
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         print(syn_np.shape)
         mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-    benign_np = np.concatenate([benign_np, syn_np], axis=0)
+    benign_np2 = np.concatenate([benign_np, syn_np], axis=0)
     print(benign_np.shape)
 
     #X_train, X_test = train_test_split(benign_np, test_size = 0.01, random_state = 42)
-    X_train, X_test =benign_np, syn_np
+    X_train, X_test =benign_np2, benign_np
     feature_weights=calculate_weights(X_train)
 elif dataset=='iot23':
     from data_preprocess.drop_columns import iot23
@@ -36,8 +36,8 @@ elif dataset=='iot23':
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-    benign_np = np.concatenate([benign_np, syn_np], axis=0)
-    X_train, X_test = benign_np, syn_np
+    benign_np2 = np.concatenate([benign_np, syn_np], axis=0)
+    X_train, X_test =benign_np2, benign_np
     feature_weights = calculate_weights(X_train)
 
     print('dataset shapes')
@@ -56,8 +56,8 @@ elif dataset=='nf_bot_iot':
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-    benign_np = np.concatenate([benign_np, syn_np], axis=0)
-    X_train, X_test =benign_np, syn_np
+    benign_np2 = np.concatenate([benign_np, syn_np], axis=0)
+    X_train, X_test =benign_np2, benign_np
 
     feature_weights=calculate_weights(X_train)
 
@@ -74,8 +74,8 @@ elif dataset=='unsw_nb15':
         print("synthetic")
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
-    benign_np = np.concatenate([benign_np, syn_np], axis=0)
-    X_train, X_test =benign_np, syn_np
+    benign_np2 = np.concatenate([benign_np, syn_np], axis=0)
+    X_train, X_test =benign_np2, benign_np
 
     X_train = X_train.astype('float64')
 
@@ -88,8 +88,8 @@ elif dataset=='kaggle_nid':
         syn_np = np.load(f"{directory}/vae/recon_benign_True_ds_{dataset}.npy")
         #mal_np = np.load(f"{directory}/vae/recon_benign_False_ds_{dataset}.npy")
 
-    benign_np = np.concatenate([benign_np, syn_np], axis=0)
-    X_train, X_test =benign_np, syn_np
+    benign_np2 = np.concatenate([benign_np, syn_np], axis=0)
+    X_train, X_test =benign_np2, benign_np
 
     feature_weights=calculate_weights(X_train)
 
